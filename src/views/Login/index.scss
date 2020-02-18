@@ -1,0 +1,40 @@
+.auth__wrapper {
+    width: 30%;
+}
+
+.Toastify__toast--error {
+    background: #f56565 !important;
+}
+
+.toast-container {
+    min-height: auto !important;
+    padding: 0.9rem !important;
+}
+
+.toast-body {
+    margin: 0 auto !important;
+}
+
+@media (max-width: 1024px) {
+    .auth__wrapper {
+        width: 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    .auth__wrapper {
+        width: 50%;
+    }
+}
+
+@media (max-width: 640px) {
+    .auth__wrapper {
+        width: 60%;
+    }
+}
+
+@media (max-width: 450px) {
+    .auth__wrapper {
+        width: 70%;
+    }
+}
