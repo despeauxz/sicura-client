@@ -2,10 +2,14 @@ import {
     LOADING,
     GET_ALL_STATES,
     GET_INCIDENCES,
+    ADD_INCIDENCE,
+    UPDATE_INCIDENCE,
+    UPDATE_STATE_SUCCESS,
+    DELETE_INCIDENCE,
     GET_STATE,
     ADD_STATE_SUCCESS,
     DELETE_STATE_SUCCESS,
-    SORT_LIST,
+    STATE_SORT_LIST,
     STATES_ERROR
 } from '../reducers/states';
 import errorHandler from '../../helpers/errorHandler';
@@ -47,8 +51,28 @@ export const getStateSuccess = data => ({
 });
 
 export const sortList = type => ({
-    type: SORT_LIST,
+    type: STATE_SORT_LIST,
     payload: type
+});
+
+export const addIncidenceSuccess = data => ({
+    type: ADD_INCIDENCE,
+    payload: data
+});
+
+export const deleteIncidenceSuccess = data => ({
+    type: DELETE_INCIDENCE,
+    payload: data
+});
+
+export const updateIncidenceSuccess = data => ({
+    type: UPDATE_INCIDENCE,
+    payload: data
+});
+
+export const updateStateSuccess = data => ({
+    type: UPDATE_STATE_SUCCESS,
+    payload: data
 });
 
 export const getIncidences = () => async dispatch => {
@@ -75,12 +99,62 @@ export const addState = data => async dispatch => {
     }
 };
 
+export const addIncidence = data => async dispatch => {
+    try {
+        dispatch(loading());
+
+        const response = await instance.post('/incidences', data);
+
+        dispatch(addIncidenceSuccess(response.data.data));
+        toast.success('Incidence added successfully');
+    } catch (error) {
+        const errorResponse = errorHandler(error);
+        dispatch(statesFailure(errorResponse.response));
+    }
+};
+
+export const updateState = (id, data) => async dispatch => {
+    try {
+        const response = await instance.patch(`/state_reports/${id}`, data);
+
+        dispatch(updateStateSuccess(response.data.data));
+        toast.success('State updated successfully');
+    } catch (error) {
+        const errorResponse = errorHandler(error);
+        dispatch(statesFailure(errorResponse.response));
+    }
+};
+
+export const updateIncidence = (id, data) => async dispatch => {
+    try {
+        const response = await instance.patch(`/incidences/${id}`, data);
+
+        dispatch(updateIncidenceSuccess(response.data.data));
+        toast.success('Incidence updated successfully');
+    } catch (error) {
+        const errorResponse = errorHandler(error);
+        dispatch(statesFailure(errorResponse.response));
+    }
+};
+
 export const deleteState = id => async dispatch => {
     try {
         await instance.delete(`/state_reports/${id}`);
 
         dispatch(deleteStateSuccess(id));
-        toast.success('State delete successfully');
+        toast.success('State deleted successfully');
+    } catch (error) {
+        const errorResponse = errorHandler(error);
+        dispatch(statesFailure(errorResponse.response));
+    }
+};
+
+export const deleteIncidence = id => async dispatch => {
+    try {
+        await instance.delete(`/incidences/${id}`);
+
+        dispatch(deleteIncidenceSuccess(id));
+        toast.success('Incidence deleted successfully');
     } catch (error) {
         const errorResponse = errorHandler(error);
         dispatch(statesFailure(errorResponse.response));

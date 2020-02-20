@@ -3,6 +3,7 @@ import {
     GET_ALL_STREETS,
     GET_STREET,
     ADD_STREET_SUCCESS,
+    UPDATE_STREET_SUCCESS,
     DELETE_STREET_SUCCESS,
     SORT_LIST,
     STREET_ERROR
@@ -17,6 +18,11 @@ export const loading = () => ({
 
 export const getStreetsSuccess = data => ({
     type: GET_ALL_STREETS,
+    payload: data
+});
+
+export const updateStreetSuccess = data => ({
+    type: UPDATE_STREET_SUCCESS,
     payload: data
 });
 
@@ -53,6 +59,18 @@ export const addStreet = data => async dispatch => {
 
         dispatch(addStreetSuccess(response.data.data));
         toast.success('Street added successfully');
+    } catch (error) {
+        const errorResponse = errorHandler(error);
+        dispatch(streetsFailure(errorResponse.response));
+    }
+};
+
+export const updateStreet = (id, data) => async dispatch => {
+    try {
+        const response = await instance.patch(`/street_reports/${id}`, data);
+
+        dispatch(updateStreetSuccess(response.data.data));
+        toast.success('Street updated successfully');
     } catch (error) {
         const errorResponse = errorHandler(error);
         dispatch(streetsFailure(errorResponse.response));

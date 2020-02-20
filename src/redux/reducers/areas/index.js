@@ -2,9 +2,10 @@ export const GET_ALL_AREAS = 'GET_ALL_AREAS';
 export const GET_AREA = 'GET_AREA';
 export const GET_LGA_IN_AREA = 'GET_LGA_IN_AREA';
 export const ADD_AREA_SUCCESS = 'ADD_AREA_SUCCESS';
+export const UPDATE_AREA_SUCCESS = 'UPDATE_AREA_SUCCESS';
 export const DELETE_AREA_SUCCESS = 'DELETE_AREA_SUCCESS';
 export const AREAS_ERROR = 'AREAS_ERROR';
-export const SORT_LIST = 'SORT_LIST';
+export const AREA_SORT_LIST = 'AREA_SORT_LIST';
 export const LOADING = 'LOADING';
 
 const initialState = {
@@ -45,6 +46,15 @@ const sortList = (type, state) => {
 };
 
 export default (state = initialState, action) => {
+    const editArea = payload => {
+        const array = state.areas.slice();
+        const index = array.findIndex(area => area.id === payload.id);
+        array[index] = payload;
+        console.log(array);
+
+        return array;
+    };
+
     switch (action.type) {
         case GET_ALL_AREAS:
             return {
@@ -67,6 +77,13 @@ export default (state = initialState, action) => {
                 errors: {},
                 areas: [...state.lgas, action.payload]
             };
+        case UPDATE_AREA_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                errors: {},
+                areas: editArea(action.payload)
+            };
         case DELETE_AREA_SUCCESS:
             return {
                 ...state,
@@ -76,7 +93,7 @@ export default (state = initialState, action) => {
                     return area.id !== action.payload;
                 })
             };
-        case SORT_LIST:
+        case AREA_SORT_LIST:
             return {
                 ...state,
                 loading: false,

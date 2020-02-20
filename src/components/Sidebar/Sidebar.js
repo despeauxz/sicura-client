@@ -153,6 +153,25 @@ class Sidebar extends Component {
                                 </span>
                             </Link>
                             <Link
+                                to="/incidences"
+                                className={classnames(
+                                    'mt-2 -mx-3 px-3 py-2 flex items-center justify-between text-sm font-medium rounded-lg',
+                                    {
+                                        'bg-gray-200': pathname === '/incidences'
+                                    }
+                                )}>
+                                <span className="inline-flex">
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        className="h-6 w-6 fill-current text-gray-500">
+                                        <path d="M12 4a8 8 0 100 16 8 8 0 000-16zM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12zm13.707-2.707a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-2-2a1 1 0 111.414-1.414L11 12.586l3.293-3.293a1 1 0 011.414 0z"></path>
+                                    </svg>
+                                    <span className="ml-2 text-gray-700">
+                                        Incidences
+                                    </span>
+                                </span>
+                            </Link>
+                            <Link
                                 to="/settings"
                                 className={classnames(
                                     'mt-2 -mx-3 px-3 py-2 flex items-center justify-between text-sm font-medium rounded-lg',
@@ -180,6 +199,14 @@ class Sidebar extends Component {
                                 to="#"
                                 className="mt-4 block text-sm font-medium text-gray-700">
                                 FAQ
+                            </Link>
+                        </div>
+                        <div className="mt-4">
+                            <Link
+                                to="#"
+                                onClick={this.logoutUser}
+                                className="mt-4 block text-sm font-medium text-gray-700">
+                                Logout
                             </Link>
                         </div>
                     </div>

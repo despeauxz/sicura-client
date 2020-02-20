@@ -1,10 +1,11 @@
-import {
+import areas, {
     LOADING,
     GET_ALL_AREAS,
     GET_AREA,
     ADD_AREA_SUCCESS,
+    UPDATE_AREA_SUCCESS,
     DELETE_AREA_SUCCESS,
-    SORT_LIST,
+    AREA_SORT_LIST,
     AREAS_ERROR,
     GET_LGA_IN_AREA
 } from '../reducers/areas';
@@ -18,6 +19,11 @@ export const loading = () => ({
 
 export const getAreasSuccess = data => ({
     type: GET_ALL_AREAS,
+    payload: data
+});
+
+export const updateAreasSuccess = data => ({
+    type: UPDATE_AREA_SUCCESS,
     payload: data
 });
 
@@ -47,7 +53,7 @@ export const getSubSuccess = data => ({
 });
 
 export const sortList = type => ({
-    type: SORT_LIST,
+    type: AREA_SORT_LIST,
     payload: type
 });
 
@@ -69,6 +75,18 @@ export const addArea = data => async dispatch => {
 
         dispatch(addAreaSuccess(response.data.data));
         toast.success('Area added successfully');
+    } catch (error) {
+        const errorResponse = errorHandler(error);
+        dispatch(areasFailure(errorResponse.response));
+    }
+};
+
+export const updateArea = (id, data) => async dispatch => {
+    try {
+        const response = await instance.patch(`/area_reports/${id}`, data);
+
+        dispatch(updateAreasSuccess(response.data.data));
+        toast.success('Area updated successfully');
     } catch (error) {
         const errorResponse = errorHandler(error);
         dispatch(areasFailure(errorResponse.response));

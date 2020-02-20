@@ -1,32 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
-import { TextInput, Spinner } from '../../components';
 import { ApplicationLayout } from '../../layouts';
+import { TextInput, Spinner } from '../../components';
 import {
-    getStates,
-    getState,
-    addState,
-    deleteState,
     getIncidences,
-    updateState,
-    sortList
+    addIncidence,
+    deleteIncidence,
+    updateIncidence
 } from '../../redux/actions/states';
 
-class States extends Component {
+class Incidences extends Component {
     state = {
-        states: [],
-        errors: {},
-        selected: null,
         name: '',
-        capital: '',
+        weight: '',
+        selected: null,
         view: null,
-        order: ''
+        order: '',
+        errors: {}
     };
 
     componentDidMount() {
-        const { getStates, getIncidences } = this.props;
-        getStates();
+        const { getIncidences } = this.props;
         getIncidences();
     }
 
@@ -36,18 +31,14 @@ class States extends Component {
         }
     }
 
-    handleSelected(state) {
+    handleSelected(incidence) {
         this.setState({
-            selected: state,
+            selected: incidence,
             view: '',
-            name: state.name,
-            capital: state.capital
+            name: incidence.name,
+            weight: incidence.weight
         });
     }
-
-    createView = () => {
-        this.setState({ selected: null, view: 'add', name: '', capital: '' });
-    };
 
     handleChange = e => {
         const { name, value } = e.target;
@@ -56,44 +47,49 @@ class States extends Component {
         });
     };
 
+    createView = () => {
+        this.setState({ selected: null, view: 'add', name: '', weight: '' });
+    };
+
+    removeItem = () => {
+        this.setState({ selected: null, view: '', name: '', weight: '' });
+    };
+
+    handleDropdown(item) {
+        this.setState({ active: item });
+    }
+
     handleSubmit = e => {
         e.preventDefault();
 
-        const { name, capital, errors } = this.state;
-        const { addState } = this.props;
+        const { name, weight } = this.state;
+        const { addIncidence } = this.props;
 
         const data = {
             name,
-            capital
+            weight
         };
-        addState(data);
-        if (!errors) {
-            this.setState({ view: '', name: '', capital: '' });
-        }
+        addIncidence(data);
     };
 
     handleUpdate(e) {
         e.preventDefault();
 
-        const { name, capital, selected } = this.state;
-        const { updateState } = this.props;
+        const { name, weight, selected } = this.state;
+        const { updateIncidence } = this.props;
 
         const data = {
             name,
-            capital
+            weight
         };
-        updateState(selected.id, data);
+        updateIncidence(selected.id, data);
     }
 
     deleteItem = () => {
-        const { deleteState } = this.props;
         const { selected } = this.state;
-        deleteState(selected.id);
+        const { deleteIncidence } = this.props;
+        deleteIncidence(selected.id);
         this.setState({ selected: null });
-    };
-
-    removeItem = () => {
-        this.setState({ selected: null, view: '', name: '', capital: '' });
     };
 
     sortData = () => {
@@ -109,8 +105,8 @@ class States extends Component {
     };
 
     render() {
-        const { selected, view, name, capital, errors } = this.state;
-        const { states, loading } = this.props;
+        const { selected, view, name, weight, errors } = this.state;
+        const { incidences, loading } = this.props;
 
         return (
             <ApplicationLayout>
@@ -140,7 +136,7 @@ class States extends Component {
                                         <h3 className="mt-4 font-medium">
                                             Locations
                                         </h3>
-                                        {states.map((state, index) => {
+                                        {incidences.map((incidence, index) => {
                                             return (
                                                 <div
                                                     className="flex justify-between items-center"
@@ -149,7 +145,7 @@ class States extends Component {
                                                         <button
                                                             onClick={this.handleSelected.bind(
                                                                 this,
-                                                                state
+                                                                incidence
                                                             )}
                                                             className={classnames(
                                                                 'inline-flex items-center text-sm outline-none',
@@ -157,14 +153,14 @@ class States extends Component {
                                                                     'font-bold':
                                                                         !selected ||
                                                                         selected.id !==
-                                                                            state.id
+                                                                            incidence.id
                                                                             ? false
                                                                             : true
                                                                 }
                                                             )}>
                                                             <span>-</span>
                                                             <span className="ml-2">
-                                                                {state.name}
+                                                                {incidence.name}
                                                             </span>
                                                         </button>
                                                     </div>
@@ -194,7 +190,7 @@ class States extends Component {
                                 <button
                                     onClick={this.createView}
                                     className="ml-2"
-                                    aria-label="Add State"
+                                    aria-label="Add Incidence"
                                     data-balloon-pos="down">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -268,11 +264,11 @@ class States extends Component {
                                 </button>
                             </div>
                             <div className="flex items-center">
-                                {selected && (
+                                {selected && !view && (
                                     <button
                                         onClick={this.deleteItem}
                                         className="mr-2"
-                                        aria-label="Delete State"
+                                        aria-label="Delete Incidence"
                                         data-balloon-pos="down">
                                         <svg
                                             viewBox="0 0 24 24"
@@ -314,10 +310,11 @@ class States extends Component {
                         {!selected && !view && (
                             <div className="flex w-full h-screen justify-center items-center">
                                 <h2 className="text-gray-700">
-                                    Click list to view State details
+                                    Click list to view Incidence details
                                 </h2>
                             </div>
                         )}
+
                         {!view && selected && (
                             <div style={{ width: '60%' }}>
                                 <h2>{selected.name}</h2>
@@ -331,18 +328,18 @@ class States extends Component {
                                                 name="name"
                                                 value={name}
                                                 handleChange={this.handleChange}
-                                                placeholder="Enter State Name"
+                                                placeholder="Enter Incidence"
                                                 label="Name"
                                             />
                                         </div>
-                                        <div className="mt-1">
+                                        <div>
                                             <TextInput
-                                                type="text"
-                                                name="capital"
-                                                value={capital}
+                                                type="number"
+                                                name="weight"
+                                                value={weight}
                                                 handleChange={this.handleChange}
-                                                placeholder="Enter State Name"
-                                                label="Capital"
+                                                placeholder="Enter Weight"
+                                                label="Weight"
                                             />
                                         </div>
                                         <button
@@ -360,10 +357,11 @@ class States extends Component {
                                 </div>
                             </div>
                         )}
+
                         {view === 'add' && (
                             <div style={{ width: '60%' }}>
                                 <h2 className="uppercase mb-4 text-gray-800 font-bold">
-                                    Add State
+                                    Add Incidence
                                 </h2>
 
                                 <div className="mt-2">
@@ -374,20 +372,20 @@ class States extends Component {
                                                 name="name"
                                                 value={name}
                                                 handleChange={this.handleChange}
-                                                placeholder="Enter State Name"
+                                                placeholder="Enter Incidence"
                                                 label="Name"
                                                 error={errors.name}
                                             />
                                         </div>
-                                        <div className="mt-1">
+                                        <div>
                                             <TextInput
-                                                type="text"
-                                                name="capital"
-                                                value={capital}
+                                                type="number"
+                                                name="weight"
+                                                value={weight}
                                                 handleChange={this.handleChange}
-                                                placeholder="Enter State Name"
-                                                label="Capital"
-                                                error={errors.capital}
+                                                placeholder="Enter Weight"
+                                                label="Weight"
+                                                error={errors.weight}
                                             />
                                         </div>
                                         <button
@@ -411,21 +409,12 @@ class States extends Component {
 }
 
 const mapStateToProps = state => ({
-    states: state.states.states,
+    incidences: state.states.incidence,
     loading: state.states.loading,
-    incidence: state.states.incidence,
     errors: state.states.errors
 });
 
 export default connect(
     mapStateToProps,
-    {
-        getStates,
-        getState,
-        addState,
-        deleteState,
-        getIncidences,
-        updateState,
-        sortList
-    }
-)(States);
+    { getIncidences, addIncidence, deleteIncidence, updateIncidence }
+)(Incidences);

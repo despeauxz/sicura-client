@@ -2,6 +2,7 @@ export const GET_ALL_STREETS = 'GET_ALL_STREETS';
 export const GET_STREET = 'GET_STREET';
 export const STREET_ERROR = 'STATES_ERROR';
 export const ADD_STREET_SUCCESS = 'ADD_STREET_SUCCESS';
+export const UPDATE_STREET_SUCCESS = 'UPDATE_STREET_SUCCESS';
 export const DELETE_STREET_SUCCESS = 'DELETE_STREET_SUCCESS';
 export const SORT_LIST = 'SORT_LIST';
 export const LOADING = 'LOADING';
@@ -43,6 +44,14 @@ const sortList = (type, state) => {
 };
 
 export default (state = initialState, action) => {
+    const editStreet = payload => {
+        const array = state.streets.slice();
+        const index = array.findIndex(street => street.id === payload.id);
+        array[index] = payload;
+
+        return array;
+    };
+
     switch (action.type) {
         case GET_ALL_STREETS:
             return {
@@ -64,6 +73,13 @@ export default (state = initialState, action) => {
                 loading: false,
                 errors: {},
                 streets: [...state.states, action.payload]
+            };
+        case UPDATE_STREET_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                errors: {},
+                streets: editStreet(action.payload)
             };
         case DELETE_STREET_SUCCESS:
             return {

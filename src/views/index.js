@@ -5,4 +5,5 @@ export { default as States } from './States';
 export { default as Lgas } from './Lgas';
 export { default as Areas } from './Areas';
 export { default as Streets } from './Streets';
+export { default as Incidences } from './Incidences';
 export { default as NotFound } from './NotFound';

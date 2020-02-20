@@ -3,8 +3,10 @@ export const GET_LGA = 'GET_LGA';
 export const SORT_LIST = 'SORT_LIST';
 export const GET_LGA_IN_STATE = 'GET_LGA_IN_STATE';
 export const ADD_LGA_SUCCESS = 'ADD_LGA_SUCCESS';
+export const UPDATE_LGA_SUCCESS = 'UPDATE_LGA_SUCCESS';
 export const DELETE_LGA_SUCCESS = 'DELETE_LGA_SUCCESS';
 export const LGAS_ERROR = 'LGAS_ERROR';
+export const LGA_SORT_LIST = 'LGA_SORT_LIST';
 export const LOADING = 'LOADING';
 
 const initialState = {
@@ -45,6 +47,14 @@ const sortList = (type, state) => {
 };
 
 export default (state = initialState, action) => {
+    const editLga = payload => {
+        const array = state.lgas.slice();
+        const index = array.findIndex(lga => lga.id === payload.id);
+        array[index] = payload;
+
+        return array;
+    };
+
     switch (action.type) {
         case GET_ALL_LGAS:
             return {
@@ -67,6 +77,14 @@ export default (state = initialState, action) => {
                 errors: {},
                 lgas: [...state.lgas, action.payload]
             };
+        case UPDATE_LGA_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                errors: {},
+                lgas: editLga(action.payload)
+            };
+
         case DELETE_LGA_SUCCESS:
             return {
                 ...state,
@@ -76,7 +94,7 @@ export default (state = initialState, action) => {
                     return lga.id !== action.payload;
                 })
             };
-        case SORT_LIST:
+        case LGA_SORT_LIST:
             return {
                 ...state,
                 loading: false,

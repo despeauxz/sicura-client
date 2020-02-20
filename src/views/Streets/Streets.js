@@ -1,12 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import classnames from 'classnames';
 import { ApplicationLayout } from '../../layouts';
 import { TextInput, Spinner } from '../../components';
 import { getIncidences } from '../../redux/actions/states';
 import { getAreas, sortList } from '../../redux/actions/areas';
 import {
     getStreets,
+    updateStreet,
     deleteStreet,
     addStreet
 } from '../../redux/actions/streets';
@@ -32,9 +34,7 @@ class Lgas extends Component {
         const { getAreas, getStreets, getIncidences, incidences } = this.props;
         getAreas();
         getStreets();
-        if (!incidences.length) {
-            getIncidences();
-        }
+        getIncidences();
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -44,7 +44,13 @@ class Lgas extends Component {
     }
 
     handleSelected(street) {
-        this.setState({ selected: street, name: street.name });
+        const report = JSON.parse(street.report);
+        this.setState({
+            selected: street,
+            view: '',
+            name: street.name,
+            report
+        });
     }
 
     handleReportChange = e => {
@@ -65,11 +71,11 @@ class Lgas extends Component {
     };
 
     createView = () => {
-        this.setState({ selected: null, view: 'add' });
+        this.setState({ selected: null, view: 'add', name: '', areaId: '' });
     };
 
     removeItem = () => {
-        this.setState({ selected: null, view: '' });
+        this.setState({ selected: null, view: '', name: '', areaId: '' });
     };
 
     handleDropdown(item) {
@@ -94,6 +100,25 @@ class Lgas extends Component {
         };
         addStreet(data);
     };
+
+    handleUpdate(e) {
+        e.preventDefault();
+
+        const { name, areaId, report, selected } = this.state;
+        const { updateStreet, incidences } = this.props;
+
+        const data = {
+            name,
+            areaId,
+            report: JSON.stringify(report),
+            rating:
+                100 -
+                (report.kidnap * incidences[0].weight +
+                    report.armed_robbery * incidences[1].weight +
+                    report.murder * incidences[2].weight)
+        };
+        updateStreet(selected.id, data);
+    }
 
     deleteItem = () => {
         const { deleteStreet } = this.props;
@@ -215,29 +240,32 @@ class Lgas extends Component {
                                                                         return (
                                                                             <div
                                                                                 key={index.toString()}
-                                                                                className="mt-1 flex justify-between items-center">
-                                                                                <label className="inline-flex items-center">
-                                                                                    <input
-                                                                                        type="checkbox"
-                                                                                        className="form-checkbox"
-                                                                                        checked={
-                                                                                            !selected ||
-                                                                                            selected.id !==
-                                                                                                item.id
-                                                                                                ? false
-                                                                                                : true
+                                                                                className="mt-1 ml-3">
+                                                                                <button
+                                                                                    onClick={this.handleSelected.bind(
+                                                                                        this,
+                                                                                        item
+                                                                                    )}
+                                                                                    className={classnames(
+                                                                                        'inline-flex items-center text-sm outline-none',
+                                                                                        {
+                                                                                            'font-bold':
+                                                                                                !selected ||
+                                                                                                selected.id !==
+                                                                                                    item.id
+                                                                                                    ? false
+                                                                                                    : true
                                                                                         }
-                                                                                        onClick={this.handleSelected.bind(
-                                                                                            this,
-                                                                                            item
-                                                                                        )}
-                                                                                    />
-                                                                                    <span className="ml-2 text-sm">
+                                                                                    )}>
+                                                                                    <span>
+                                                                                        -
+                                                                                    </span>
+                                                                                    <span className="ml-2">
                                                                                         {
                                                                                             item.name
                                                                                         }
                                                                                     </span>
-                                                                                </label>
+                                                                                </button>
                                                                             </div>
                                                                         );
                                                                     }
@@ -272,12 +300,76 @@ class Lgas extends Component {
                                 <button
                                     onClick={this.createView}
                                     className="ml-2"
-                                    aria-label="Add LGA"
+                                    aria-label="Add Street"
                                     data-balloon-pos="down">
                                     <svg
-                                        viewBox="0 0 24 24"
-                                        className="h-6 w-6 fill-current text-gray-600">
-                                        <path d="M19.707 4.293a1 1 0 00-1.414 0L10 12.586V14h1.414l8.293-8.293a1 1 0 000-1.414zM16.88 2.879A3 3 0 1121.12 7.12l-8.585 8.586a1 1 0 01-.708.293H9a1 1 0 01-1-1v-2.828a1 1 0 01.293-.708l8.586-8.585zM6 6a1 1 0 00-1 1v11a1 1 0 001 1h11a1 1 0 001-1v-5a1 1 0 112 0v5a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h5a1 1 0 110 2H6z"></path>
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 64 64"
+                                        width="30px"
+                                        height="30px">
+                                        <linearGradient
+                                            id="KJ7ka9GQp0CHqT_2YsWMsa"
+                                            x1="32"
+                                            x2="32"
+                                            y1="5.75"
+                                            y2="59.005"
+                                            gradientUnits="userSpaceOnUse"
+                                            spreadMethod="reflect">
+                                            <stop
+                                                offset="0"
+                                                stop-color="#718096"
+                                            />
+                                            <stop
+                                                offset="1"
+                                                stop-color="#718096"
+                                            />
+                                        </linearGradient>
+                                        <path
+                                            fill="url(#KJ7ka9GQp0CHqT_2YsWMsa)"
+                                            d="M32,58C17.663,58,6,46.337,6,32S17.663,6,32,6s26,11.663,26,26S46.337,58,32,58z M32,8 C18.767,8,8,18.767,8,32s10.767,24,24,24s24-10.767,24-24S45.233,8,32,8z"
+                                        />
+                                        <linearGradient
+                                            id="KJ7ka9GQp0CHqT_2YsWMsb"
+                                            x1="32"
+                                            x2="32"
+                                            y1="5.75"
+                                            y2="59.005"
+                                            gradientUnits="userSpaceOnUse"
+                                            spreadMethod="reflect">
+                                            <stop
+                                                offset="0"
+                                                stop-color="#718096"
+                                            />
+                                            <stop
+                                                offset="1"
+                                                stop-color="#718096"
+                                            />
+                                        </linearGradient>
+                                        <path
+                                            fill="url(#KJ7ka9GQp0CHqT_2YsWMsb)"
+                                            d="M32,52c-11.028,0-20-8.972-20-20s8.972-20,20-20s20,8.972,20,20S43.028,52,32,52z M32,14 c-9.925,0-18,8.075-18,18s8.075,18,18,18s18-8.075,18-18S41.925,14,32,14z"
+                                        />
+                                        <linearGradient
+                                            id="KJ7ka9GQp0CHqT_2YsWMsc"
+                                            x1="32"
+                                            x2="32"
+                                            y1="21.75"
+                                            y2="42.538"
+                                            gradientUnits="userSpaceOnUse"
+                                            spreadMethod="reflect">
+                                            <stop
+                                                offset="0"
+                                                stop-color="#718096"
+                                            />
+                                            <stop
+                                                offset="1"
+                                                stop-color="#718096"
+                                            />
+                                        </linearGradient>
+                                        <path
+                                            fill="url(#KJ7ka9GQp0CHqT_2YsWMsc)"
+                                            d="M41,30h-7v-7c0-0.552-0.448-1-1-1h-2c-0.552,0-1,0.448-1,1v7h-7c-0.552,0-1,0.448-1,1v2 c0,0.552,0.448,1,1,1h7v7c0,0.552,0.448,1,1,1h2c0.552,0,1-0.448,1-1v-7h7c0.552,0,1-0.448,1-1v-2C42,30.448,41.552,30,41,30z"
+                                        />
                                     </svg>
                                 </button>
                             </div>
@@ -286,7 +378,7 @@ class Lgas extends Component {
                                     <button
                                         onClick={this.deleteItem}
                                         className="mr-2"
-                                        aria-label="Delete LGA"
+                                        aria-label="Delete Street"
                                         data-balloon-pos="down">
                                         <svg
                                             viewBox="0 0 24 24"
@@ -328,7 +420,7 @@ class Lgas extends Component {
                         {!selected && !view && (
                             <div className="flex w-full h-screen justify-center items-center">
                                 <h2 className="text-gray-700">
-                                    Click list to view LGA details
+                                    Click list to view Street details
                                 </h2>
                             </div>
                         )}
@@ -338,7 +430,8 @@ class Lgas extends Component {
                                 <h2>{selected.name}</h2>
 
                                 <div className="mt-2">
-                                    <form>
+                                    <form
+                                        onSubmit={this.handleUpdate.bind(this)}>
                                         <div>
                                             <TextInput
                                                 type="text"
@@ -349,6 +442,93 @@ class Lgas extends Component {
                                                 label="Name"
                                             />
                                         </div>
+                                        <div className="w-full">
+                                            <TextInput
+                                                type="select"
+                                                name="areaId"
+                                                value={areaId}
+                                                list={areas}
+                                                selected={selected}
+                                                handleChange={this.handleChange}
+                                                placeholder="Select Area"
+                                                label="Area"
+                                                error={errors.areaId}
+                                            />
+                                        </div>
+                                        <div className="w-full text-gray-700 my-2">
+                                            <fieldset className="border border-gray-300">
+                                                <legend className="text-sm bg-gray-600 rounded text-white py-1 px-2 ml-2">
+                                                    Report
+                                                </legend>
+                                                <div className="w-full flex items-center m-2">
+                                                    <h3 className="mr-4">
+                                                        Murder
+                                                    </h3>
+                                                    <TextInput
+                                                        type="number"
+                                                        name="murder"
+                                                        value={report.murder}
+                                                        handleChange={
+                                                            this
+                                                                .handleReportChange
+                                                        }
+                                                        className="flex-1"
+                                                        placeholder="Ratings"
+                                                        label=""
+                                                        error={errors.rating}
+                                                    />
+                                                </div>
+                                                <div className="w-full flex items-center m-2">
+                                                    <h3 className="mr-4">
+                                                        Kidnap
+                                                    </h3>
+                                                    <TextInput
+                                                        type="number"
+                                                        name="kidnap"
+                                                        value={report.kidnap}
+                                                        handleChange={
+                                                            this
+                                                                .handleReportChange
+                                                        }
+                                                        className="flex-1"
+                                                        placeholder="Ratings"
+                                                        label=""
+                                                        error={errors.rating}
+                                                    />
+                                                </div>
+                                                <div className="w-full flex items-center m-2">
+                                                    <h3 className="mr-4">
+                                                        Armed Robbery
+                                                    </h3>
+                                                    <TextInput
+                                                        type="number"
+                                                        name="armed_robbery"
+                                                        value={
+                                                            report.armed_robbery
+                                                        }
+                                                        handleChange={
+                                                            this
+                                                                .handleReportChange
+                                                        }
+                                                        className="flex-1"
+                                                        placeholder="Ratings"
+                                                        label=""
+                                                        error={errors.rating}
+                                                    />
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <button
+                                            onClick={this.handleUpdate.bind(
+                                                this
+                                            )}
+                                            className="w-64 mt-2 bg-teal-400 text-white rounded py-2 rounded-full">
+                                            {loading ? (
+                                                <Spinner type="circle" />
+                                            ) : (
+                                                <span>Update</span>
+                                            )}
+                                        </button>
                                     </form>
                                 </div>
                             </div>
@@ -379,6 +559,7 @@ class Lgas extends Component {
                                                 name="areaId"
                                                 value={areaId}
                                                 list={areas}
+                                                selected={selected}
                                                 handleChange={this.handleChange}
                                                 placeholder="Select Area"
                                                 label="Area"
@@ -478,5 +659,13 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { getAreas, getStreets, addStreet, deleteStreet, getIncidences, sortList }
+    {
+        getAreas,
+        getStreets,
+        addStreet,
+        updateStreet,
+        deleteStreet,
+        getIncidences,
+        sortList
+    }
 )(Lgas);

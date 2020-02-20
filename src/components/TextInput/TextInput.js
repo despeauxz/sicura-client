@@ -39,6 +39,7 @@ class TextInput extends Component {
             className,
             list,
             error,
+            selected,
             ...rest
         } = this.props;
 
@@ -89,7 +90,14 @@ class TextInput extends Component {
                         {...rest}>
                         {list.map((item, index) => {
                             return (
-                                <option value={item.id} key={index.toString()}>
+                                <option
+                                    value={item.id}
+                                    key={index.toString()}
+                                    selected={
+                                        !selected || selected.id !== item.id
+                                            ? false
+                                            : true
+                                    }>
                                     {item.name}
                                 </option>
                             );

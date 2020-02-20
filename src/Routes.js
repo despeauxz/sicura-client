@@ -12,7 +12,8 @@ import {
     States,
     Lgas,
     Areas,
-    Streets
+    Streets,
+    Incidences
 } from './views';
 
 const Routes = () => {
@@ -28,6 +29,11 @@ const Routes = () => {
                     exact
                     path="/streets"
                     component={Authenticator(Streets)}
+                />
+                <Route
+                    exact
+                    path="/incidences"
+                    component={Authenticator(Incidences)}
                 />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/404" component={NotFound} />

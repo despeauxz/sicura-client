@@ -3,8 +3,9 @@ import {
     GET_ALL_LGAS,
     GET_LGA,
     ADD_LGA_SUCCESS,
+    UPDATE_LGA_SUCCESS,
     DELETE_LGA_SUCCESS,
-    SORT_LIST,
+    LGA_SORT_LIST,
     LGAS_ERROR,
     GET_LGA_IN_STATE
 } from '../reducers/lgas';
@@ -18,6 +19,11 @@ export const loading = () => ({
 
 export const getLgasSuccess = data => ({
     type: GET_ALL_LGAS,
+    payload: data
+});
+
+export const updateLgasSuccess = data => ({
+    type: UPDATE_LGA_SUCCESS,
     payload: data
 });
 
@@ -47,7 +53,7 @@ export const getSubSuccess = data => ({
 });
 
 export const sortList = type => ({
-    type: SORT_LIST,
+    type: LGA_SORT_LIST,
     payload: type
 });
 
@@ -68,6 +74,18 @@ export const addLga = data => async dispatch => {
 
         dispatch(addLgaSuccess(response.data.data));
         toast.success('LGA added successfully');
+    } catch (error) {
+        const errorResponse = errorHandler(error);
+        dispatch(lgasFailure(errorResponse.response));
+    }
+};
+
+export const updateLga = (id, data) => async dispatch => {
+    try {
+        const response = await instance.patch(`/lga_reports/${id}`, data);
+
+        dispatch(updateLgasSuccess(response.data.data));
+        toast.success('LGA updated successfully');
     } catch (error) {
         const errorResponse = errorHandler(error);
         dispatch(lgasFailure(errorResponse.response));
