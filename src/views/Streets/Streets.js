@@ -225,56 +225,56 @@ class Lgas extends Component {
                                                             </svg>
                                                         )}
                                                     </Link>
-                                                    {active.id === area.id ? (
-                                                        <Fragment>
-                                                            {streets
-                                                                .filter(
-                                                                    street =>
-                                                                        street.areaId ===
-                                                                        area.id
-                                                                )
-                                                                .map(
-                                                                    (
-                                                                        item,
-                                                                        index
-                                                                    ) => {
-                                                                        return (
-                                                                            <div
-                                                                                key={index.toString()}
-                                                                                className="mt-1 ml-3">
-                                                                                <button
-                                                                                    onClick={this.handleSelected.bind(
-                                                                                        this,
-                                                                                        item
-                                                                                    )}
-                                                                                    className={classnames(
-                                                                                        'inline-flex items-center text-sm outline-none',
-                                                                                        {
-                                                                                            'font-bold':
-                                                                                                !selected ||
-                                                                                                selected.id !==
-                                                                                                    item.id
-                                                                                                    ? false
-                                                                                                    : true
-                                                                                        }
-                                                                                    )}>
-                                                                                    <span>
-                                                                                        -
-                                                                                    </span>
-                                                                                    <span className="ml-2">
-                                                                                        {
-                                                                                            item.name
-                                                                                        }
-                                                                                    </span>
-                                                                                </button>
-                                                                            </div>
-                                                                        );
-                                                                    }
-                                                                )}
-                                                        </Fragment>
-                                                    ) : (
-                                                        <Fragment></Fragment>
-                                                    )}
+                                                    <ul className="list-disc ml-2">
+                                                        {active.id ===
+                                                        area.id ? (
+                                                            <Fragment>
+                                                                {streets
+                                                                    .filter(
+                                                                        street =>
+                                                                            street.areaId ===
+                                                                            area.id
+                                                                    )
+                                                                    .map(
+                                                                        (
+                                                                            item,
+                                                                            index
+                                                                        ) => {
+                                                                            return (
+                                                                                <div
+                                                                                    key={index.toString()}
+                                                                                    className="mt-1 ml-3">
+                                                                                    <button
+                                                                                        onClick={this.handleSelected.bind(
+                                                                                            this,
+                                                                                            item
+                                                                                        )}
+                                                                                        className={classnames(
+                                                                                            'inline-flex items-center text-sm outline-none',
+                                                                                            {
+                                                                                                'font-bold':
+                                                                                                    !selected ||
+                                                                                                    selected.id !==
+                                                                                                        item.id
+                                                                                                        ? false
+                                                                                                        : true
+                                                                                            }
+                                                                                        )}>
+                                                                                        <li className="ml-2">
+                                                                                            {
+                                                                                                item.name
+                                                                                            }
+                                                                                        </li>
+                                                                                    </button>
+                                                                                </div>
+                                                                            );
+                                                                        }
+                                                                    )}
+                                                            </Fragment>
+                                                        ) : (
+                                                            <Fragment></Fragment>
+                                                        )}
+                                                    </ul>
                                                 </Fragment>
                                             );
                                         })}
@@ -544,13 +544,15 @@ class Lgas extends Component {
                                         </form>
                                     </div>
                                 </div>
-                                <div className="ml-20" style={{ width: '40%' }}>
-                                    <h4 className="font-bold text-xl text-center">
-                                        Sicura Rating
-                                    </h4>
-                                    <h4 className="text-2xl text-gray-800 italic text-center">
-                                        {selected.rating}%
-                                    </h4>
+                                <div className="ml-20" style={{ width: '20%' }}>
+                                    <div className="p-4 border border-gray-300 rounded shadow">
+                                        <h4 className="text-base leading-tight uppercase text-center font-medium">
+                                            Sicura Rating
+                                        </h4>
+                                        <h4 className="text-2xl text-gray-800 italic text-center">
+                                            {selected.rating}%
+                                        </h4>
+                                    </div>
                                 </div>
                             </div>
                         )}

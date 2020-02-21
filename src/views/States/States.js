@@ -140,38 +140,36 @@ class States extends Component {
                                         <h3 className="mt-4 font-medium">
                                             Locations
                                         </h3>
-                                        <ul className="list-disc">
-                                            {states.map((state, index) => {
-                                                return (
-                                                    <div
-                                                        className="flex justify-between items-center"
-                                                        key={index.toString()}>
-                                                        <div className="mt-3">
-                                                            <button
-                                                                onClick={this.handleSelected.bind(
-                                                                    this,
-                                                                    state
-                                                                )}
-                                                                className={classnames(
-                                                                    'inline-flex items-center text-sm outline-none',
-                                                                    {
-                                                                        'font-bold':
-                                                                            !selected ||
-                                                                            selected.id !==
-                                                                                state.id
-                                                                                ? false
-                                                                                : true
-                                                                    }
-                                                                )}>
-                                                                <li className="ml-2">
-                                                                    {state.name}
-                                                                </li>
-                                                            </button>
-                                                        </div>
+                                        {states.map((state, index) => {
+                                            return (
+                                                <div
+                                                    className="flex justify-between items-center"
+                                                    key={index.toString()}>
+                                                    <div className="mt-3">
+                                                        <button
+                                                            onClick={this.handleSelected.bind(
+                                                                this,
+                                                                state
+                                                            )}
+                                                            className={classnames(
+                                                                'inline-flex items-center text-sm outline-none',
+                                                                {
+                                                                    'font-bold':
+                                                                        !selected ||
+                                                                        selected.id !==
+                                                                            state.id
+                                                                            ? false
+                                                                            : true
+                                                                }
+                                                            )}>
+                                                            <span className="">
+                                                                {state.name}
+                                                            </span>
+                                                        </button>
                                                     </div>
-                                                );
-                                            })}
-                                        </ul>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             </div>

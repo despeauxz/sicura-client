@@ -158,8 +158,7 @@ class Incidences extends Component {
                                                                             : true
                                                                 }
                                                             )}>
-                                                            <span>-</span>
-                                                            <span className="ml-2">
+                                                            <span className="">
                                                                 {incidence.name}
                                                             </span>
                                                         </button>
