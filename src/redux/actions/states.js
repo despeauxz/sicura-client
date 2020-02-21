@@ -115,6 +115,7 @@ export const addIncidence = data => async dispatch => {
 
 export const updateState = (id, data) => async dispatch => {
     try {
+        dispatch(loading());
         const response = await instance.patch(`/state_reports/${id}`, data);
 
         dispatch(updateStateSuccess(response.data.data));

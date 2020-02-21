@@ -86,7 +86,6 @@ class TextInput extends Component {
                         placeholder={placeholder}
                         name={name}
                         onChange={handleChange}
-                        defaultValue={!selected ? list[0].id : selected.id}
                         value={value}
                         {...rest}>
                         {list.map((item, index) => {

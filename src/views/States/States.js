@@ -140,37 +140,38 @@ class States extends Component {
                                         <h3 className="mt-4 font-medium">
                                             Locations
                                         </h3>
-                                        {states.map((state, index) => {
-                                            return (
-                                                <div
-                                                    className="flex justify-between items-center"
-                                                    key={index.toString()}>
-                                                    <div className="mt-3">
-                                                        <button
-                                                            onClick={this.handleSelected.bind(
-                                                                this,
-                                                                state
-                                                            )}
-                                                            className={classnames(
-                                                                'inline-flex items-center text-sm outline-none',
-                                                                {
-                                                                    'font-bold':
-                                                                        !selected ||
-                                                                        selected.id !==
-                                                                            state.id
-                                                                            ? false
-                                                                            : true
-                                                                }
-                                                            )}>
-                                                            <span>-</span>
-                                                            <span className="ml-2">
-                                                                {state.name}
-                                                            </span>
-                                                        </button>
+                                        <ul className="list-disc">
+                                            {states.map((state, index) => {
+                                                return (
+                                                    <div
+                                                        className="flex justify-between items-center"
+                                                        key={index.toString()}>
+                                                        <div className="mt-3">
+                                                            <button
+                                                                onClick={this.handleSelected.bind(
+                                                                    this,
+                                                                    state
+                                                                )}
+                                                                className={classnames(
+                                                                    'inline-flex items-center text-sm outline-none',
+                                                                    {
+                                                                        'font-bold':
+                                                                            !selected ||
+                                                                            selected.id !==
+                                                                                state.id
+                                                                                ? false
+                                                                                : true
+                                                                    }
+                                                                )}>
+                                                                <li className="ml-2">
+                                                                    {state.name}
+                                                                </li>
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            );
-                                        })}
+                                                );
+                                            })}
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -366,13 +367,15 @@ class States extends Component {
                                         </form>
                                     </div>
                                 </div>
-                                <div className="ml-20" style={{ width: '40%' }}>
-                                    <h4 className="font-bold text-xl text-center">
-                                        Sicura Rating
-                                    </h4>
-                                    <h4 className="text-2xl text-gray-800 italic text-center">
-                                        {selected.rating}%
-                                    </h4>
+                                <div className="ml-20" style={{ width: '20%' }}>
+                                    <div className="p-4 border border-gray-300 rounded shadow">
+                                        <h4 className="text-base leading-tight uppercase text-center font-medium">
+                                            Sicura Rating
+                                        </h4>
+                                        <h4 className="text-2xl text-gray-800 italic text-center">
+                                            {selected.rating}%
+                                        </h4>
+                                    </div>
                                 </div>
                             </div>
                         )}

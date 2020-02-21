@@ -96,6 +96,7 @@ export const addArea = data => async dispatch => {
 
 export const updateArea = (id, data) => async dispatch => {
     try {
+        dispatch(loading());
         const response = await instance.patch(`/area_reports/${id}`, data);
         const areas = await instance.get(
             `/lga_area/${response.data.data.lgaId}`

@@ -95,6 +95,7 @@ export const addLga = data => async dispatch => {
 
 export const updateLga = (id, data) => async dispatch => {
     try {
+        dispatch(loading());
         const response = await instance.patch(`/lga_reports/${id}`, data);
         const lgas = await instance.get(
             `/state_lga/${response.data.data.stateId}`
