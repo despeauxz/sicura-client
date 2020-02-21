@@ -181,7 +181,8 @@ class Lgas extends Component {
                                         </h3>
                                         {areas.map((area, index) => {
                                             return (
-                                                <Fragment>
+                                                <Fragment
+                                                    key={index.toString()}>
                                                     <Link
                                                         to="#"
                                                         onClick={this.handleDropdown.bind(
@@ -317,11 +318,11 @@ class Lgas extends Component {
                                             spreadMethod="reflect">
                                             <stop
                                                 offset="0"
-                                                stop-color="#718096"
+                                                stopColor="#718096"
                                             />
                                             <stop
                                                 offset="1"
-                                                stop-color="#718096"
+                                                stopColor="#718096"
                                             />
                                         </linearGradient>
                                         <path
@@ -338,11 +339,11 @@ class Lgas extends Component {
                                             spreadMethod="reflect">
                                             <stop
                                                 offset="0"
-                                                stop-color="#718096"
+                                                stopColor="#718096"
                                             />
                                             <stop
                                                 offset="1"
-                                                stop-color="#718096"
+                                                stopColor="#718096"
                                             />
                                         </linearGradient>
                                         <path
@@ -359,11 +360,11 @@ class Lgas extends Component {
                                             spreadMethod="reflect">
                                             <stop
                                                 offset="0"
-                                                stop-color="#718096"
+                                                stopColor="#718096"
                                             />
                                             <stop
                                                 offset="1"
-                                                stop-color="#718096"
+                                                stopColor="#718096"
                                             />
                                         </linearGradient>
                                         <path
@@ -426,110 +427,130 @@ class Lgas extends Component {
                         )}
 
                         {!view && selected && (
-                            <div style={{ width: '60%' }}>
-                                <h2>{selected.name}</h2>
+                            <div className="flex items-center">
+                                <div style={{ width: '60%' }}>
+                                    <h2>{selected.name}</h2>
 
-                                <div className="mt-2">
-                                    <form
-                                        onSubmit={this.handleUpdate.bind(this)}>
-                                        <div>
-                                            <TextInput
-                                                type="text"
-                                                name="name"
-                                                value={name}
-                                                handleChange={this.handleChange}
-                                                placeholder="Enter State Name"
-                                                label="Name"
-                                            />
-                                        </div>
-                                        <div className="w-full">
-                                            <TextInput
-                                                type="select"
-                                                name="areaId"
-                                                value={areaId}
-                                                list={areas}
-                                                selected={selected}
-                                                handleChange={this.handleChange}
-                                                placeholder="Select Area"
-                                                label="Area"
-                                                error={errors.areaId}
-                                            />
-                                        </div>
-                                        <div className="w-full text-gray-700 my-2">
-                                            <fieldset className="border border-gray-300">
-                                                <legend className="text-sm bg-gray-600 rounded text-white py-1 px-2 ml-2">
-                                                    Report
-                                                </legend>
-                                                <div className="w-full flex items-center m-2">
-                                                    <h3 className="mr-4">
-                                                        Murder
-                                                    </h3>
-                                                    <TextInput
-                                                        type="number"
-                                                        name="murder"
-                                                        value={report.murder}
-                                                        handleChange={
-                                                            this
-                                                                .handleReportChange
-                                                        }
-                                                        className="flex-1"
-                                                        placeholder="Ratings"
-                                                        label=""
-                                                        error={errors.rating}
-                                                    />
-                                                </div>
-                                                <div className="w-full flex items-center m-2">
-                                                    <h3 className="mr-4">
-                                                        Kidnap
-                                                    </h3>
-                                                    <TextInput
-                                                        type="number"
-                                                        name="kidnap"
-                                                        value={report.kidnap}
-                                                        handleChange={
-                                                            this
-                                                                .handleReportChange
-                                                        }
-                                                        className="flex-1"
-                                                        placeholder="Ratings"
-                                                        label=""
-                                                        error={errors.rating}
-                                                    />
-                                                </div>
-                                                <div className="w-full flex items-center m-2">
-                                                    <h3 className="mr-4">
-                                                        Armed Robbery
-                                                    </h3>
-                                                    <TextInput
-                                                        type="number"
-                                                        name="armed_robbery"
-                                                        value={
-                                                            report.armed_robbery
-                                                        }
-                                                        handleChange={
-                                                            this
-                                                                .handleReportChange
-                                                        }
-                                                        className="flex-1"
-                                                        placeholder="Ratings"
-                                                        label=""
-                                                        error={errors.rating}
-                                                    />
-                                                </div>
-                                            </fieldset>
-                                        </div>
-                                        <button
-                                            onClick={this.handleUpdate.bind(
+                                    <div className="mt-2">
+                                        <form
+                                            onSubmit={this.handleUpdate.bind(
                                                 this
-                                            )}
-                                            className="w-64 mt-2 bg-teal-400 text-white rounded py-2 rounded-full">
-                                            {loading ? (
-                                                <Spinner type="circle" />
-                                            ) : (
-                                                <span>Update</span>
-                                            )}
-                                        </button>
-                                    </form>
+                                            )}>
+                                            <div>
+                                                <TextInput
+                                                    type="text"
+                                                    name="name"
+                                                    value={name}
+                                                    handleChange={
+                                                        this.handleChange
+                                                    }
+                                                    placeholder="Enter State Name"
+                                                    label="Name"
+                                                />
+                                            </div>
+                                            <div className="w-full">
+                                                <TextInput
+                                                    type="select"
+                                                    name="areaId"
+                                                    value={areaId}
+                                                    list={areas}
+                                                    selected={selected}
+                                                    handleChange={
+                                                        this.handleChange
+                                                    }
+                                                    placeholder="Select Area"
+                                                    label="Area"
+                                                    error={null}
+                                                />
+                                            </div>
+                                            <div className="w-full text-gray-700 my-2">
+                                                <fieldset className="border border-gray-300">
+                                                    <legend className="text-sm bg-gray-600 rounded text-white py-1 px-2 ml-2">
+                                                        Report
+                                                    </legend>
+                                                    <div className="w-full flex items-center m-2">
+                                                        <h3 className="mr-4">
+                                                            Murder
+                                                        </h3>
+                                                        <TextInput
+                                                            type="number"
+                                                            name="murder"
+                                                            value={
+                                                                report.murder
+                                                            }
+                                                            handleChange={
+                                                                this
+                                                                    .handleReportChange
+                                                            }
+                                                            className="flex-1"
+                                                            placeholder="Ratings"
+                                                            label=""
+                                                            error={null}
+                                                        />
+                                                    </div>
+                                                    <div className="w-full flex items-center m-2">
+                                                        <h3 className="mr-4">
+                                                            Kidnap
+                                                        </h3>
+                                                        <TextInput
+                                                            type="number"
+                                                            name="kidnap"
+                                                            value={
+                                                                report.kidnap
+                                                            }
+                                                            handleChange={
+                                                                this
+                                                                    .handleReportChange
+                                                            }
+                                                            className="flex-1"
+                                                            placeholder="Ratings"
+                                                            label=""
+                                                            error={null}
+                                                        />
+                                                    </div>
+                                                    <div className="w-full flex items-center m-2">
+                                                        <h3 className="mr-4">
+                                                            Armed Robbery
+                                                        </h3>
+                                                        <TextInput
+                                                            type="number"
+                                                            name="armed_robbery"
+                                                            value={
+                                                                report.armed_robbery
+                                                            }
+                                                            handleChange={
+                                                                this
+                                                                    .handleReportChange
+                                                            }
+                                                            className="flex-1"
+                                                            placeholder="Ratings"
+                                                            label=""
+                                                            error={null}
+                                                        />
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                            <button
+                                                onClick={this.handleUpdate.bind(
+                                                    this
+                                                )}
+                                                className="w-64 mt-2 bg-teal-400 text-white rounded py-2 rounded-full">
+                                                {loading ? (
+                                                    <Spinner type="circle" />
+                                                ) : (
+                                                    <span>Update</span>
+                                                )}
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div className="ml-20" style={{ width: '40%' }}>
+                                    <h4 className="font-bold text-xl text-center">
+                                        Sicura Rating
+                                    </h4>
+                                    <h4 className="text-2xl text-gray-800 italic text-center">
+                                        {selected.rating}%
+                                    </h4>
                                 </div>
                             </div>
                         )}
@@ -550,7 +571,7 @@ class Lgas extends Component {
                                                 handleChange={this.handleChange}
                                                 placeholder="Enter Street Name"
                                                 label="Name"
-                                                error={errors.name}
+                                                error={null}
                                             />
                                         </div>
                                         <div className="w-full">
@@ -563,7 +584,7 @@ class Lgas extends Component {
                                                 handleChange={this.handleChange}
                                                 placeholder="Select Area"
                                                 label="Area"
-                                                error={errors.areaId}
+                                                error={null}
                                             />
                                         </div>
                                         <div className="w-full text-gray-700 my-2">
@@ -586,7 +607,7 @@ class Lgas extends Component {
                                                         className="flex-1"
                                                         placeholder="Ratings"
                                                         label=""
-                                                        error={errors.rating}
+                                                        error={null}
                                                     />
                                                 </div>
                                                 <div className="w-full flex items-center m-2">
@@ -604,7 +625,7 @@ class Lgas extends Component {
                                                         className="flex-1"
                                                         placeholder="Ratings"
                                                         label=""
-                                                        error={errors.rating}
+                                                        error={null}
                                                     />
                                                 </div>
                                                 <div className="w-full flex items-center m-2">
@@ -624,7 +645,7 @@ class Lgas extends Component {
                                                         className="flex-1"
                                                         placeholder="Ratings"
                                                         label=""
-                                                        error={errors.rating}
+                                                        error={null}
                                                     />
                                                 </div>
                                             </fieldset>

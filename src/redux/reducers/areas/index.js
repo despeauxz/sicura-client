@@ -75,7 +75,7 @@ export default (state = initialState, action) => {
                 ...state,
                 loading: false,
                 errors: {},
-                areas: [...state.lgas, action.payload]
+                areas: [...state.areas, action.payload]
             };
         case UPDATE_AREA_SUCCESS:
             return {

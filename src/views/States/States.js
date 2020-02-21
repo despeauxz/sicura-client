@@ -319,44 +319,60 @@ class States extends Component {
                             </div>
                         )}
                         {!view && selected && (
-                            <div style={{ width: '60%' }}>
-                                <h2>{selected.name}</h2>
+                            <div className="flex items-center">
+                                <div style={{ width: '60%' }}>
+                                    <h2>{selected.name}</h2>
 
-                                <div className="mt-2">
-                                    <form
-                                        onSubmit={this.handleUpdate.bind(this)}>
-                                        <div>
-                                            <TextInput
-                                                type="text"
-                                                name="name"
-                                                value={name}
-                                                handleChange={this.handleChange}
-                                                placeholder="Enter State Name"
-                                                label="Name"
-                                            />
-                                        </div>
-                                        <div className="mt-1">
-                                            <TextInput
-                                                type="text"
-                                                name="capital"
-                                                value={capital}
-                                                handleChange={this.handleChange}
-                                                placeholder="Enter State Name"
-                                                label="Capital"
-                                            />
-                                        </div>
-                                        <button
-                                            onClick={this.handleUpdate.bind(
+                                    <div className="mt-2">
+                                        <form
+                                            onSubmit={this.handleUpdate.bind(
                                                 this
-                                            )}
-                                            className="w-64 mt-2 bg-teal-400 text-white rounded py-2 rounded-full">
-                                            {loading ? (
-                                                <Spinner type="circle" />
-                                            ) : (
-                                                <span>Update</span>
-                                            )}
-                                        </button>
-                                    </form>
+                                            )}>
+                                            <div>
+                                                <TextInput
+                                                    type="text"
+                                                    name="name"
+                                                    value={name}
+                                                    handleChange={
+                                                        this.handleChange
+                                                    }
+                                                    placeholder="Enter State Name"
+                                                    label="Name"
+                                                />
+                                            </div>
+                                            <div className="mt-1">
+                                                <TextInput
+                                                    type="text"
+                                                    name="capital"
+                                                    value={capital}
+                                                    handleChange={
+                                                        this.handleChange
+                                                    }
+                                                    placeholder="Enter State Name"
+                                                    label="Capital"
+                                                />
+                                            </div>
+                                            <button
+                                                onClick={this.handleUpdate.bind(
+                                                    this
+                                                )}
+                                                className="w-64 mt-2 bg-teal-400 text-white rounded py-2 rounded-full">
+                                                {loading ? (
+                                                    <Spinner type="circle" />
+                                                ) : (
+                                                    <span>Update</span>
+                                                )}
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div className="ml-20" style={{ width: '40%' }}>
+                                    <h4 className="font-bold text-xl text-center">
+                                        Sicura Rating
+                                    </h4>
+                                    <h4 className="text-2xl text-gray-800 italic text-center">
+                                        {selected.rating}%
+                                    </h4>
                                 </div>
                             </div>
                         )}

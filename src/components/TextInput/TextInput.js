@@ -86,18 +86,12 @@ class TextInput extends Component {
                         placeholder={placeholder}
                         name={name}
                         onChange={handleChange}
+                        defaultValue={!selected ? list[0].id : selected.id}
                         value={value}
                         {...rest}>
                         {list.map((item, index) => {
                             return (
-                                <option
-                                    value={item.id}
-                                    key={index.toString()}
-                                    selected={
-                                        !selected || selected.id !== item.id
-                                            ? false
-                                            : true
-                                    }>
+                                <option value={item.id} key={index.toString()}>
                                     {item.name}
                                 </option>
                             );

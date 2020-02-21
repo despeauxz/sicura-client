@@ -32,7 +32,7 @@ const Routes = () => {
                 />
                 <Route
                     exact
-                    path="/incidences"
+                    path="/incidents"
                     component={Authenticator(Incidences)}
                 />
                 <Route exact path="/login" component={Login} />

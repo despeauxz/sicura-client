@@ -71,6 +71,19 @@ export const addLga = data => async dispatch => {
         dispatch(loading());
 
         const response = await instance.post('/lga_reports', data);
+        const lgas = await instance.get(
+            `/state_lga/${response.data.data.stateId}`
+        );
+
+        const rating = lgas.data.data
+            .map(lga => {
+                return lga.rating;
+            })
+            .reduce((prev, cur) => prev + cur);
+
+        await instance.patch(`/state_reports/${response.data.data.stateId}`, {
+            rating: Math.round(rating / lgas.data.data.length)
+        });
 
         dispatch(addLgaSuccess(response.data.data));
         toast.success('LGA added successfully');
@@ -83,6 +96,19 @@ export const addLga = data => async dispatch => {
 export const updateLga = (id, data) => async dispatch => {
     try {
         const response = await instance.patch(`/lga_reports/${id}`, data);
+        const lgas = await instance.get(
+            `/state_lga/${response.data.data.stateId}`
+        );
+
+        const rating = lgas.data.data
+            .map(lga => {
+                return lga.rating;
+            })
+            .reduce((prev, cur) => prev + cur);
+
+        await instance.patch(`/state_reports/${response.data.data.stateId}`, {
+            rating: Math.round(rating / lgas.data.data.length)
+        });
 
         dispatch(updateLgasSuccess(response.data.data));
         toast.success('LGA updated successfully');

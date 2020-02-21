@@ -72,6 +72,19 @@ export const addArea = data => async dispatch => {
         dispatch(loading());
 
         const response = await instance.post('/area_reports', data);
+        const areas = await instance.get(
+            `/lga_area/${response.data.data.lgaId}`
+        );
+
+        const rating = areas.data.data
+            .map(area => {
+                return area.rating;
+            })
+            .reduce((prev, cur) => prev + cur);
+
+        await instance.patch(`/lga_reports/${response.data.data.lgaId}`, {
+            rating: Math.round(rating / areas.data.data.length)
+        });
 
         dispatch(addAreaSuccess(response.data.data));
         toast.success('Area added successfully');
@@ -84,6 +97,19 @@ export const addArea = data => async dispatch => {
 export const updateArea = (id, data) => async dispatch => {
     try {
         const response = await instance.patch(`/area_reports/${id}`, data);
+        const areas = await instance.get(
+            `/lga_area/${response.data.data.lgaId}`
+        );
+
+        const rating = areas.data.data
+            .map(area => {
+                return area.rating;
+            })
+            .reduce((prev, cur) => prev + cur);
+
+        await instance.patch(`/lga_reports/${response.data.data.lgaId}`, {
+            rating: Math.round(rating / areas.data.data.length)
+        });
 
         dispatch(updateAreasSuccess(response.data.data));
         toast.success('Area updated successfully');

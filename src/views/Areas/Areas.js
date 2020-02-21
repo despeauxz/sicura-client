@@ -48,16 +48,6 @@ class Areas extends Component {
         this.setState({ selected: area, view: '', name: area.name, report });
     }
 
-    handleReportChange = e => {
-        const { report } = { ...this.state };
-        const currentState = report;
-        const { name, value } = e.target;
-        currentState[name] = value;
-        this.setState({
-            report: currentState
-        });
-    };
-
     handleChange = e => {
         const { name, value } = e.target;
         this.setState({
@@ -135,15 +125,7 @@ class Areas extends Component {
     };
 
     render() {
-        const {
-            selected,
-            active,
-            view,
-            name,
-            lgaId,
-            report,
-            errors
-        } = this.state;
+        const { selected, active, view, name, lgaId, report } = this.state;
         const { lgas, areas, loading } = this.props;
 
         return (
@@ -421,110 +403,123 @@ class Areas extends Component {
                         )}
 
                         {!view && selected && (
-                            <div style={{ width: '60%' }}>
-                                <h2>{selected.name}</h2>
+                            <div className="flex items-center">
+                                <div style={{ width: '60%' }}>
+                                    <h2>{selected.name}</h2>
 
-                                <div className="mt-2">
-                                    <form
-                                        onSubmit={this.handleUpdate.bind(this)}>
-                                        <div>
-                                            <TextInput
-                                                type="text"
-                                                name="name"
-                                                value={name}
-                                                handleChange={this.handleChange}
-                                                placeholder="Enter State Name"
-                                                label="Name"
-                                            />
-                                        </div>
-                                        <div className="w-full">
-                                            <TextInput
-                                                type="select"
-                                                name="lgaId"
-                                                value={lgaId}
-                                                list={lgas}
-                                                selected={selected}
-                                                handleChange={this.handleChange}
-                                                placeholder="Select LGA"
-                                                label="LGA"
-                                                error={errors.lgaId}
-                                            />
-                                        </div>
-                                        <div className="w-full text-gray-700 my-2">
-                                            <fieldset className="border border-gray-300">
-                                                <legend className="text-sm bg-gray-600 rounded text-white py-1 px-2 ml-2">
-                                                    Report
-                                                </legend>
-                                                <div className="w-full flex items-center m-2">
-                                                    <h3 className="mr-4">
-                                                        Murder
-                                                    </h3>
-                                                    <TextInput
-                                                        type="number"
-                                                        name="murder"
-                                                        value={report.murder}
-                                                        handleChange={
-                                                            this
-                                                                .handleReportChange
-                                                        }
-                                                        className="flex-1"
-                                                        placeholder="Ratings"
-                                                        label=""
-                                                        error={errors.rating}
-                                                    />
-                                                </div>
-                                                <div className="w-full flex items-center m-2">
-                                                    <h3 className="mr-4">
-                                                        Kidnap
-                                                    </h3>
-                                                    <TextInput
-                                                        type="number"
-                                                        name="kidnap"
-                                                        value={report.kidnap}
-                                                        handleChange={
-                                                            this
-                                                                .handleReportChange
-                                                        }
-                                                        className="flex-1"
-                                                        placeholder="Ratings"
-                                                        label=""
-                                                        error={errors.rating}
-                                                    />
-                                                </div>
-                                                <div className="w-full flex items-center m-2">
-                                                    <h3 className="mr-4">
-                                                        Armed Robbery
-                                                    </h3>
-                                                    <TextInput
-                                                        type="number"
-                                                        name="armed_robbery"
-                                                        value={
-                                                            report.armed_robbery
-                                                        }
-                                                        handleChange={
-                                                            this
-                                                                .handleReportChange
-                                                        }
-                                                        className="flex-1"
-                                                        placeholder="Ratings"
-                                                        label=""
-                                                        error={errors.rating}
-                                                    />
-                                                </div>
-                                            </fieldset>
-                                        </div>
-                                        <button
-                                            onClick={this.handleUpdate.bind(
+                                    <div className="mt-2">
+                                        <form
+                                            onSubmit={this.handleUpdate.bind(
                                                 this
-                                            )}
-                                            className="w-64 mt-2 bg-teal-400 text-white rounded py-2 rounded-full">
-                                            {loading ? (
-                                                <Spinner type="circle" />
-                                            ) : (
-                                                <span>Update</span>
-                                            )}
-                                        </button>
-                                    </form>
+                                            )}>
+                                            <div>
+                                                <TextInput
+                                                    type="text"
+                                                    name="name"
+                                                    value={name}
+                                                    handleChange={
+                                                        this.handleChange
+                                                    }
+                                                    placeholder="Enter State Name"
+                                                    label="Name"
+                                                    error={null}
+                                                />
+                                            </div>
+                                            <div className="w-full">
+                                                <TextInput
+                                                    type="select"
+                                                    name="lgaId"
+                                                    value={lgaId}
+                                                    list={lgas}
+                                                    selected={selected}
+                                                    handleChange={
+                                                        this.handleChange
+                                                    }
+                                                    placeholder="Select LGA"
+                                                    label="LGA"
+                                                    error={null}
+                                                />
+                                            </div>
+                                            <div className="w-full text-gray-700 my-2">
+                                                <fieldset className="border border-gray-300">
+                                                    <legend className="text-sm bg-gray-600 rounded text-white py-1 px-2 ml-2">
+                                                        Report
+                                                    </legend>
+                                                    <div className="w-full flex items-center m-2">
+                                                        <h3 className="mr-4">
+                                                            Murder
+                                                        </h3>
+                                                        <TextInput
+                                                            type="number"
+                                                            name="murder"
+                                                            value={
+                                                                report.murder
+                                                            }
+                                                            disabled
+                                                            className="flex-1"
+                                                            placeholder="Ratings"
+                                                            label=""
+                                                            error={null}
+                                                        />
+                                                    </div>
+                                                    <div className="w-full flex items-center m-2">
+                                                        <h3 className="mr-4">
+                                                            Kidnap
+                                                        </h3>
+                                                        <TextInput
+                                                            type="number"
+                                                            name="kidnap"
+                                                            value={
+                                                                report.kidnap
+                                                            }
+                                                            disabled
+                                                            className="flex-1"
+                                                            placeholder="Ratings"
+                                                            label=""
+                                                            error={null}
+                                                        />
+                                                    </div>
+                                                    <div className="w-full flex items-center m-2">
+                                                        <h3 className="mr-4">
+                                                            Armed Robbery
+                                                        </h3>
+                                                        <TextInput
+                                                            type="number"
+                                                            name="armed_robbery"
+                                                            value={
+                                                                report.armed_robbery
+                                                            }
+                                                            disabled
+                                                            className="flex-1"
+                                                            placeholder="Ratings"
+                                                            label=""
+                                                            error={null}
+                                                        />
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+
+                                            <button
+                                                onClick={this.handleUpdate.bind(
+                                                    this
+                                                )}
+                                                className="w-64 mt-2 bg-teal-400 text-white rounded py-2 rounded-full">
+                                                {loading ? (
+                                                    <Spinner type="circle" />
+                                                ) : (
+                                                    <span>Update</span>
+                                                )}
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div className="ml-20" style={{ width: '40%' }}>
+                                    <h4 className="font-bold text-xl text-center">
+                                        Sicura Rating
+                                    </h4>
+                                    <h4 className="text-2xl text-gray-800 italic text-center">
+                                        {selected.rating}%
+                                    </h4>
                                 </div>
                             </div>
                         )}
@@ -545,7 +540,7 @@ class Areas extends Component {
                                                 handleChange={this.handleChange}
                                                 placeholder="Enter Area Name"
                                                 label="Name"
-                                                error={errors.name}
+                                                error={null}
                                             />
                                         </div>
                                         <div className="w-full">
@@ -558,72 +553,10 @@ class Areas extends Component {
                                                 handleChange={this.handleChange}
                                                 placeholder="Select LGA"
                                                 label="LGA"
-                                                error={errors.lgaId}
+                                                error={null}
                                             />
                                         </div>
-                                        <div className="w-full text-gray-700 my-2">
-                                            <fieldset className="border border-gray-300">
-                                                <legend className="text-sm bg-gray-600 rounded text-white py-1 px-2 ml-2">
-                                                    Report
-                                                </legend>
-                                                <div className="w-full flex items-center m-2">
-                                                    <h3 className="mr-4">
-                                                        Murder
-                                                    </h3>
-                                                    <TextInput
-                                                        type="number"
-                                                        name="murder"
-                                                        value={report.murder}
-                                                        handleChange={
-                                                            this
-                                                                .handleReportChange
-                                                        }
-                                                        className="flex-1"
-                                                        placeholder="Ratings"
-                                                        label=""
-                                                        error={errors.rating}
-                                                    />
-                                                </div>
-                                                <div className="w-full flex items-center m-2">
-                                                    <h3 className="mr-4">
-                                                        Kidnap
-                                                    </h3>
-                                                    <TextInput
-                                                        type="number"
-                                                        name="kidnap"
-                                                        value={report.kidnap}
-                                                        handleChange={
-                                                            this
-                                                                .handleReportChange
-                                                        }
-                                                        className="flex-1"
-                                                        placeholder="Ratings"
-                                                        label=""
-                                                        error={errors.rating}
-                                                    />
-                                                </div>
-                                                <div className="w-full flex items-center m-2">
-                                                    <h3 className="mr-4">
-                                                        Armed Robbery
-                                                    </h3>
-                                                    <TextInput
-                                                        type="number"
-                                                        name="armed_robbery"
-                                                        value={
-                                                            report.armed_robbery
-                                                        }
-                                                        handleChange={
-                                                            this
-                                                                .handleReportChange
-                                                        }
-                                                        className="flex-1"
-                                                        placeholder="Ratings"
-                                                        label=""
-                                                        error={errors.rating}
-                                                    />
-                                                </div>
-                                            </fieldset>
-                                        </div>
+
                                         <button
                                             onClick={this.handleSubmit}
                                             className="w-64 mt-2 bg-teal-400 text-white rounded py-2 rounded-full">

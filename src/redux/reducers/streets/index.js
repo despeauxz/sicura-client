@@ -45,7 +45,7 @@ const sortList = (type, state) => {
 
 export default (state = initialState, action) => {
     const editStreet = payload => {
-        const array = state.streets.slice();
+        const array = [...state.streets];
         const index = array.findIndex(street => street.id === payload.id);
         array[index] = payload;
 
@@ -72,7 +72,7 @@ export default (state = initialState, action) => {
                 ...state,
                 loading: false,
                 errors: {},
-                streets: [...state.states, action.payload]
+                streets: [...state.streets, action.payload]
             };
         case UPDATE_STREET_SUCCESS:
             return {
@@ -86,8 +86,8 @@ export default (state = initialState, action) => {
                 ...state,
                 loading: false,
                 errors: {},
-                streets: [...state.states].filter(state => {
-                    return state.id !== action.payload;
+                streets: [...state.streets].filter(street => {
+                    return street.id !== action.payload;
                 })
             };
         case SORT_LIST:
