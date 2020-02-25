@@ -11,10 +11,10 @@ import {
     DELETE_STATE_SUCCESS,
     STATE_SORT_LIST,
     STATES_ERROR
-} from '../reducers/states';
-import errorHandler from '../../helpers/errorHandler';
-import { toast } from 'react-toastify';
-import instance from '../../config/axios';
+} from "../reducers/states";
+import errorHandler from "../../helpers/errorHandler";
+import { toast } from "react-toastify";
+import instance from "../../config/axios";
 
 export const loading = () => ({
     type: LOADING
@@ -50,9 +50,9 @@ export const getStateSuccess = data => ({
     payload: data
 });
 
-export const sortList = type => ({
+export const sortList = (type, sort) => ({
     type: STATE_SORT_LIST,
-    payload: type
+    payload: { type, sort }
 });
 
 export const addIncidenceSuccess = data => ({
@@ -77,7 +77,7 @@ export const updateStateSuccess = data => ({
 
 export const getIncidences = () => async dispatch => {
     try {
-        const data = await instance.get('/incidences');
+        const data = await instance.get("/incidences");
         dispatch(getIncidentSuccess(data.data.data));
     } catch (error) {
         const errorResponse = errorHandler(error);
@@ -89,10 +89,10 @@ export const addState = data => async dispatch => {
     try {
         dispatch(loading());
 
-        const response = await instance.post('/state_reports', data);
+        const response = await instance.post("/state_reports", data);
 
         dispatch(addStateSuccess(response.data.data));
-        toast.success('State added successfully');
+        toast.success("State added successfully");
     } catch (error) {
         const errorResponse = errorHandler(error);
         dispatch(statesFailure(errorResponse.response));
@@ -103,10 +103,10 @@ export const addIncidence = data => async dispatch => {
     try {
         dispatch(loading());
 
-        const response = await instance.post('/incidences', data);
+        const response = await instance.post("/incidences", data);
 
         dispatch(addIncidenceSuccess(response.data.data));
-        toast.success('Incidence added successfully');
+        toast.success("Incidence added successfully");
     } catch (error) {
         const errorResponse = errorHandler(error);
         dispatch(statesFailure(errorResponse.response));
@@ -119,7 +119,7 @@ export const updateState = (id, data) => async dispatch => {
         const response = await instance.patch(`/state_reports/${id}`, data);
 
         dispatch(updateStateSuccess(response.data.data));
-        toast.success('State updated successfully');
+        toast.success("State updated successfully");
     } catch (error) {
         const errorResponse = errorHandler(error);
         dispatch(statesFailure(errorResponse.response));
@@ -131,7 +131,7 @@ export const updateIncidence = (id, data) => async dispatch => {
         const response = await instance.patch(`/incidences/${id}`, data);
 
         dispatch(updateIncidenceSuccess(response.data.data));
-        toast.success('Incidence updated successfully');
+        toast.success("Incidence updated successfully");
     } catch (error) {
         const errorResponse = errorHandler(error);
         dispatch(statesFailure(errorResponse.response));
@@ -140,10 +140,8 @@ export const updateIncidence = (id, data) => async dispatch => {
 
 export const deleteState = id => async dispatch => {
     try {
-        await instance.delete(`/state_reports/${id}`);
-
         dispatch(deleteStateSuccess(id));
-        toast.success('State deleted successfully');
+        await instance.delete(`/state_reports/${id}`);
     } catch (error) {
         const errorResponse = errorHandler(error);
         dispatch(statesFailure(errorResponse.response));
@@ -152,10 +150,8 @@ export const deleteState = id => async dispatch => {
 
 export const deleteIncidence = id => async dispatch => {
     try {
-        await instance.delete(`/incidences/${id}`);
-
         dispatch(deleteIncidenceSuccess(id));
-        toast.success('Incidence deleted successfully');
+        await instance.delete(`/incidences/${id}`);
     } catch (error) {
         const errorResponse = errorHandler(error);
         dispatch(statesFailure(errorResponse.response));
@@ -166,7 +162,7 @@ export const getStates = () => async dispatch => {
     try {
         dispatch(loading());
 
-        const data = await instance.get('/state_reports');
+        const data = await instance.get("/state_reports");
         dispatch(getStatesSuccess(data.data.data));
     } catch (error) {
         const errorResponse = errorHandler(error);

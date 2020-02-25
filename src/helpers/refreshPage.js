@@ -1,5 +1,5 @@
-import decodeToken from './decodedToken';
-import { resetUser, authenticateUser } from '../redux/actions/auth';
+import decodeToken from "./decodedToken";
+import { resetUser, authenticateUser } from "../redux/actions/auth";
 
 /**
  * Refreshes and reauthenticates page with token in local storage
@@ -8,13 +8,14 @@ import { resetUser, authenticateUser } from '../redux/actions/auth';
  * @returns {void}
  */
 const refreshPage = store => {
-    if (localStorage.getItem('jwtToken')) {
+    if (localStorage.getItem("token")) {
         const {
             decoded: { exp }
         } = decodeToken();
 
         if (exp < Math.floor(Date.now() / 1000)) {
-            localStorage.removeItem('jwtToken');
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
             store.dispatch(resetUser());
         } else {
             store.dispatch(authenticateUser());

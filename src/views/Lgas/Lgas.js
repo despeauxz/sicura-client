@@ -1,27 +1,34 @@
-import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import classnames from 'classnames';
-import { ApplicationLayout } from '../../layouts';
-import { TextInput, Spinner } from '../../components';
-import { getStates, sortList } from '../../redux/actions/states';
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import swal from "sweetalert";
+import classnames from "classnames";
+import { ApplicationLayout } from "../../layouts";
+import { TextInput, Spinner } from "../../components";
+import { getStates, sortList } from "../../redux/actions/states";
 import {
     getLgas,
     deleteLga,
     addLga,
     updateLga
-} from '../../redux/actions/lgas';
+} from "../../redux/actions/lgas";
 
 class Lgas extends Component {
     state = {
         states: [],
         lgas: [],
+        sort: "",
         active: {},
-        name: '',
-        stateId: '',
+        name: "",
+        report: {
+            kidnap: 0,
+            murder: 0,
+            armed_robbery: 0
+        },
+        stateId: "",
         selected: null,
         view: null,
-        order: ''
+        order: ""
     };
 
     componentDidMount() {
@@ -39,7 +46,7 @@ class Lgas extends Component {
     handleSelected(lga) {
         this.setState({
             selected: lga,
-            view: '',
+            view: "",
             name: lga.name,
             stateId: lga.stateId
         });
@@ -53,11 +60,11 @@ class Lgas extends Component {
     };
 
     createView = () => {
-        this.setState({ selected: null, view: 'add', name: '', stateId: '' });
+        this.setState({ selected: null, view: "add", name: "", stateId: "" });
     };
 
     removeItem = () => {
-        this.setState({ selected: null, view: '', name: '', stateId: '' });
+        this.setState({ selected: null, view: "", name: "", stateId: "" });
     };
 
     handleDropdown(item) {
@@ -67,11 +74,12 @@ class Lgas extends Component {
     handleSubmit = e => {
         e.preventDefault();
 
-        const { name, stateId } = this.state;
+        const { name, report, stateId } = this.state;
         const { addLga } = this.props;
 
         const data = {
             name,
+            report: JSON.stringify(report),
             stateId
         };
         addLga(data);
@@ -93,38 +101,68 @@ class Lgas extends Component {
     deleteItem = () => {
         const { deleteLga } = this.props;
         const { selected } = this.state;
-        deleteLga(selected.id);
-        this.setState({ selected: null });
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to undo action!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true
+        }).then(willDelete => {
+            if (willDelete) {
+                deleteLga(selected.id);
+                this.setState({ selected: null });
+                swal("Poof! item has been deleted!", {
+                    icon: "success"
+                });
+            } else {
+                return;
+            }
+        });
     };
 
     sortData = () => {
-        const { order } = this.state;
+        const { order, sort } = this.state;
         const { sortList } = this.props;
-        if (!order || order === 'desc') {
-            this.setState({ order: 'asc' });
-            sortList('asc');
+        if (!order || order === "desc") {
+            this.setState({ order: "asc" });
+            sortList("asc", sort);
         } else {
-            this.setState({ order: 'desc' });
-            sortList('desc');
+            this.setState({ order: "desc" });
+            sortList("desc", sort);
         }
     };
 
     render() {
-        const { selected, active, view, name, stateId, errors } = this.state;
+        const {
+            selected,
+            active,
+            view,
+            name,
+            sort,
+            stateId,
+            errors
+        } = this.state;
         const { states, lgas, loading } = this.props;
 
         return (
             <ApplicationLayout>
                 <div className="hidden lg:flex flex-col relative z-10 w-full max-w-xs flex-grow flex-shrink-0 border-r bg-gray-300">
                     <div className="flex-shrink-0 px-4 py-2 flex items-center justify-between border-b bg-gray-200">
-                        <button className="flex items-center text-xs font-semibold text-gray-600">
-                            Sorted by Name
-                            <svg
-                                viewBox="0 0 24 24"
-                                className="ml-1 h-6 w-6 fill-current text-gray-500">
-                                <path d="M7.293 9.293a1 1 0 011.414 0L12 12.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"></path>
-                            </svg>
-                        </button>
+                        <select
+                            className={classnames(
+                                "form-select outline-none mt-1 block text-sm bg-gray-200 text-gray-600",
+                                {
+                                    "border-red-500": false,
+                                    className: true
+                                }
+                            )}
+                            placeholder="Sort by ..."
+                            name="sort"
+                            onChange={this.handleChange}
+                            value={sort}>
+                            <option value="">Sort by Name</option>
+                            <option value="rating">Sort by Ratings</option>
+                        </select>
                         <button onClick={this.sortData}>
                             <svg
                                 viewBox="0 0 24 24"
@@ -212,9 +250,9 @@ class Lgas extends Component {
                                                                                             item
                                                                                         )}
                                                                                         className={classnames(
-                                                                                            'inline-flex items-center text-sm outline-none',
+                                                                                            "inline-flex items-center text-sm outline-none",
                                                                                             {
-                                                                                                'font-bold':
+                                                                                                "font-bold":
                                                                                                     !selected ||
                                                                                                     selected.id !==
                                                                                                         item.id
@@ -390,7 +428,7 @@ class Lgas extends Component {
 
                         {!view && selected && (
                             <div className="flex items-center">
-                                <div style={{ width: '60%' }}>
+                                <div style={{ width: "60%" }}>
                                     <h2>{selected.name}</h2>
 
                                     <div className="mt-2">
@@ -439,7 +477,7 @@ class Lgas extends Component {
                                         </form>
                                     </div>
                                 </div>
-                                <div className="ml-20" style={{ width: '20%' }}>
+                                <div className="ml-20" style={{ width: "20%" }}>
                                     <div className="p-4 border border-gray-300 rounded shadow">
                                         <h4 className="text-base leading-tight uppercase text-center font-medium">
                                             Sicura Rating
@@ -452,8 +490,8 @@ class Lgas extends Component {
                             </div>
                         )}
 
-                        {view === 'add' && (
-                            <div style={{ width: '60%' }}>
+                        {view === "add" && (
+                            <div style={{ width: "60%" }}>
                                 <h2 className="uppercase mb-4 text-gray-800 font-bold">
                                     Add LGA
                                 </h2>
@@ -507,7 +545,7 @@ const mapStateToProps = state => ({
     states: state.states.states,
     lgas: state.lgas.lgas,
     loading: state.lgas.loading,
-    errors: state.states.errors
+    errors: state.lgas.errors
 });
 
 export default connect(

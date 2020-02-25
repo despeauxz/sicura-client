@@ -1,11 +1,12 @@
-import axios from 'axios';
+import axios from "axios";
 
 const instance = axios.create({
-    baseURL: 'https://sicura.herokuapp.com/api'
+    baseURL: "https://sicura.herokuapp.com/api"
+    // baseURL: 'http://localhost:3000/api'
 });
 
 instance.interceptors.request.use(config => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     config.headers.authorization = `Bearer ${token}`;
     return config;
 });
@@ -17,7 +18,7 @@ instance.interceptors.response.use(
             response: { status, data }
         } = error;
 
-        if (status === 401 && data.error === 'Token Expired') {
+        if (status === 401 && data.error === "Token Expired") {
             window.location.reload();
         }
 

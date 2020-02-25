@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import classnames from 'classnames';
-import { ApplicationLayout } from '../../layouts';
-import { TextInput, Spinner } from '../../components';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import classnames from "classnames";
+import { ApplicationLayout } from "../../layouts";
+import { TextInput, Spinner } from "../../components";
 import {
     getIncidences,
     addIncidence,
     deleteIncidence,
     updateIncidence
-} from '../../redux/actions/states';
+} from "../../redux/actions/states";
 
 class Incidences extends Component {
     state = {
-        name: '',
-        weight: '',
+        name: "",
+        weight: "",
         selected: null,
         view: null,
-        order: '',
+        order: "",
         errors: {}
     };
 
@@ -34,7 +34,7 @@ class Incidences extends Component {
     handleSelected(incidence) {
         this.setState({
             selected: incidence,
-            view: '',
+            view: "",
             name: incidence.name,
             weight: incidence.weight
         });
@@ -48,11 +48,11 @@ class Incidences extends Component {
     };
 
     createView = () => {
-        this.setState({ selected: null, view: 'add', name: '', weight: '' });
+        this.setState({ selected: null, view: "add", name: "", weight: "" });
     };
 
     removeItem = () => {
-        this.setState({ selected: null, view: '', name: '', weight: '' });
+        this.setState({ selected: null, view: "", name: "", weight: "" });
     };
 
     handleDropdown(item) {
@@ -95,12 +95,12 @@ class Incidences extends Component {
     sortData = () => {
         const { order } = this.state;
         const { sortList } = this.props;
-        if (!order || order === 'desc') {
-            this.setState({ order: 'asc' });
-            sortList('asc');
+        if (!order || order === "desc") {
+            this.setState({ order: "asc" });
+            sortList("asc");
         } else {
-            this.setState({ order: 'desc' });
-            sortList('desc');
+            this.setState({ order: "desc" });
+            sortList("desc");
         }
     };
 
@@ -111,7 +111,7 @@ class Incidences extends Component {
         return (
             <ApplicationLayout>
                 <div className="hidden lg:flex flex-col relative z-10 w-full max-w-xs flex-grow flex-shrink-0 border-r bg-gray-300">
-                    <div className="flex-shrink-0 px-4 py-2 flex items-center justify-between border-b bg-gray-200">
+                    {/* <div className="flex-shrink-0 px-4 py-2 flex items-center justify-between border-b bg-gray-200">
                         <button className="flex items-center text-xs font-semibold text-gray-600">
                             Sorted by Name
                             <svg
@@ -120,14 +120,14 @@ class Incidences extends Component {
                                 <path d="M7.293 9.293a1 1 0 011.414 0L12 12.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"></path>
                             </svg>
                         </button>
-                        <button onClick={this.sortData}>
+                        <button>
                             <svg
                                 viewBox="0 0 24 24"
                                 className="h-6 w-6 fill-current text-gray-500">
                                 <path d="M16 3H3a1 1 0 000 2h13a1 1 0 100-2zm-4 4H3a1 1 0 000 2h9a1 1 0 100-2zm-9 4h6a1 1 0 110 2H3a1 1 0 110-2zm9.293.293l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L18 10.414V20a1 1 0 11-2 0v-9.586l-2.293 2.293a1 1 0 01-1.414-1.414z"></path>
                             </svg>
                         </button>
-                    </div>
+                    </div> */}
                     <div className="flex-1 overflow-y-auto">
                         <div className="bg-gray-200">
                             <div>
@@ -148,9 +148,9 @@ class Incidences extends Component {
                                                                 incidence
                                                             )}
                                                             className={classnames(
-                                                                'inline-flex items-center text-sm outline-none',
+                                                                "inline-flex items-center text-sm outline-none",
                                                                 {
-                                                                    'font-bold':
+                                                                    "font-bold":
                                                                         !selected ||
                                                                         selected.id !==
                                                                             incidence.id
@@ -315,7 +315,7 @@ class Incidences extends Component {
                         )}
 
                         {!view && selected && (
-                            <div style={{ width: '60%' }}>
+                            <div style={{ width: "60%" }}>
                                 <h2>{selected.name}</h2>
 
                                 <div className="mt-2">
@@ -357,8 +357,8 @@ class Incidences extends Component {
                             </div>
                         )}
 
-                        {view === 'add' && (
-                            <div style={{ width: '60%' }}>
+                        {view === "add" && (
+                            <div style={{ width: "60%" }}>
                                 <h2 className="uppercase mb-4 text-gray-800 font-bold">
                                     Add Incidence
                                 </h2>

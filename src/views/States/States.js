@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import classnames from 'classnames';
-import { TextInput, Spinner } from '../../components';
-import { ApplicationLayout } from '../../layouts';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import classnames from "classnames";
+import swal from "sweetalert";
+import { TextInput, Spinner } from "../../components";
+import { ApplicationLayout } from "../../layouts";
 import {
     getStates,
     getState,
@@ -11,17 +12,24 @@ import {
     getIncidences,
     updateState,
     sortList
-} from '../../redux/actions/states';
+} from "../../redux/actions/states";
+import "./index.scss";
 
 class States extends Component {
     state = {
         states: [],
         errors: {},
+        sort: "",
         selected: null,
-        name: '',
-        capital: '',
+        name: "",
+        capital: "",
+        report: {
+            kidnap: 0,
+            murder: 0,
+            armed_robbery: 0
+        },
         view: null,
-        order: ''
+        order: ""
     };
 
     componentDidMount() {
@@ -39,14 +47,14 @@ class States extends Component {
     handleSelected(state) {
         this.setState({
             selected: state,
-            view: '',
+            view: "",
             name: state.name,
             capital: state.capital
         });
     }
 
     createView = () => {
-        this.setState({ selected: null, view: 'add', name: '', capital: '' });
+        this.setState({ selected: null, view: "add", name: "", capital: "" });
     };
 
     handleChange = e => {
@@ -59,17 +67,15 @@ class States extends Component {
     handleSubmit = e => {
         e.preventDefault();
 
-        const { name, capital, errors } = this.state;
+        const { name, capital, report } = this.state;
         const { addState } = this.props;
 
         const data = {
             name,
-            capital
+            capital,
+            report: JSON.stringify(report)
         };
         addState(data);
-        if (!errors) {
-            this.setState({ view: '', name: '', capital: '' });
-        }
     };
 
     handleUpdate(e) {
@@ -88,42 +94,65 @@ class States extends Component {
     deleteItem = () => {
         const { deleteState } = this.props;
         const { selected } = this.state;
-        deleteState(selected.id);
-        this.setState({ selected: null });
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to undo action!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true
+        }).then(willDelete => {
+            if (willDelete) {
+                deleteState(selected.id);
+                this.setState({ selected: null });
+                swal("Poof! item has been deleted!", {
+                    icon: "success"
+                });
+            } else {
+                return;
+            }
+        });
     };
 
     removeItem = () => {
-        this.setState({ selected: null, view: '', name: '', capital: '' });
+        this.setState({ selected: null, view: "", name: "", capital: "" });
     };
 
     sortData = () => {
-        const { order } = this.state;
+        const { order, sort } = this.state;
         const { sortList } = this.props;
-        if (!order || order === 'desc') {
-            this.setState({ order: 'asc' });
-            sortList('asc');
+        if (!order || order === "desc") {
+            this.setState({ order: "asc" });
+            sortList("asc", sort);
         } else {
-            this.setState({ order: 'desc' });
-            sortList('desc');
+            this.setState({ order: "desc" });
+            sortList("desc", sort);
         }
     };
 
     render() {
-        const { selected, view, name, capital, errors } = this.state;
+        const { selected, view, name, capital, sort, errors } = this.state;
         const { states, loading } = this.props;
+        console.log(sort);
 
         return (
             <ApplicationLayout>
                 <div className="hidden lg:flex flex-col relative z-10 w-full max-w-xs flex-grow flex-shrink-0 border-r bg-gray-300">
                     <div className="flex-shrink-0 px-4 py-2 flex items-center justify-between border-b bg-gray-200">
-                        <button className="flex items-center text-xs font-semibold text-gray-600">
-                            Sorted by Name
-                            <svg
-                                viewBox="0 0 24 24"
-                                className="ml-1 h-6 w-6 fill-current text-gray-500">
-                                <path d="M7.293 9.293a1 1 0 011.414 0L12 12.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"></path>
-                            </svg>
-                        </button>
+                        <select
+                            className={classnames(
+                                "form-select outline-none mt-1 block text-sm bg-gray-200 text-gray-600",
+                                {
+                                    "border-red-500": false,
+                                    className: true
+                                }
+                            )}
+                            placeholder="Sort by ..."
+                            name="sort"
+                            onChange={this.handleChange}
+                            value={sort}>
+                            <option value="">Sort by Name</option>
+                            <option value="rating">Sort by Ratings</option>
+                        </select>
                         <button onClick={this.sortData}>
                             <svg
                                 viewBox="0 0 24 24"
@@ -152,9 +181,9 @@ class States extends Component {
                                                                 state
                                                             )}
                                                             className={classnames(
-                                                                'inline-flex items-center text-sm outline-none',
+                                                                "inline-flex items-center text-sm outline-none",
                                                                 {
-                                                                    'font-bold':
+                                                                    "font-bold":
                                                                         !selected ||
                                                                         selected.id !==
                                                                             state.id
@@ -319,7 +348,7 @@ class States extends Component {
                         )}
                         {!view && selected && (
                             <div className="flex items-center">
-                                <div style={{ width: '60%' }}>
+                                <div style={{ width: "60%" }}>
                                     <h2>{selected.name}</h2>
 
                                     <div className="mt-2">
@@ -365,7 +394,7 @@ class States extends Component {
                                         </form>
                                     </div>
                                 </div>
-                                <div className="ml-20" style={{ width: '20%' }}>
+                                <div className="ml-20" style={{ width: "20%" }}>
                                     <div className="p-4 border border-gray-300 rounded shadow">
                                         <h4 className="text-base leading-tight uppercase text-center font-medium">
                                             Sicura Rating
@@ -377,8 +406,8 @@ class States extends Component {
                                 </div>
                             </div>
                         )}
-                        {view === 'add' && (
-                            <div style={{ width: '60%' }}>
+                        {view === "add" && (
+                            <div style={{ width: "60%" }}>
                                 <h2 className="uppercase mb-4 text-gray-800 font-bold">
                                     Add State
                                 </h2>

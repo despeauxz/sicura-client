@@ -1,13 +1,13 @@
-export const GET_ALL_LGAS = 'GET_ALL_LGAS';
-export const GET_LGA = 'GET_LGA';
-export const SORT_LIST = 'SORT_LIST';
-export const GET_LGA_IN_STATE = 'GET_LGA_IN_STATE';
-export const ADD_LGA_SUCCESS = 'ADD_LGA_SUCCESS';
-export const UPDATE_LGA_SUCCESS = 'UPDATE_LGA_SUCCESS';
-export const DELETE_LGA_SUCCESS = 'DELETE_LGA_SUCCESS';
-export const LGAS_ERROR = 'LGAS_ERROR';
-export const LGA_SORT_LIST = 'LGA_SORT_LIST';
-export const LOADING = 'LOADING';
+export const GET_ALL_LGAS = "GET_ALL_LGAS";
+export const GET_LGA = "GET_LGA";
+export const SORT_LIST = "SORT_LIST";
+export const GET_LGA_IN_STATE = "GET_LGA_IN_STATE";
+export const ADD_LGA_SUCCESS = "ADD_LGA_SUCCESS";
+export const UPDATE_LGA_SUCCESS = "UPDATE_LGA_SUCCESS";
+export const DELETE_LGA_SUCCESS = "DELETE_LGA_SUCCESS";
+export const LGAS_ERROR = "LGAS_ERROR";
+export const LGA_SORT_LIST = "LGA_SORT_LIST";
+export const LOADING = "LOADING";
 
 const initialState = {
     lgas: [],
@@ -17,22 +17,12 @@ const initialState = {
     loading: false
 };
 
-const sortList = (type, state) => {
+const sortList = (payload, state) => {
+    const { type, sort } = payload;
     const clone = [...state.lgas];
-    if (type === 'asc') {
-        return clone.sort((a, b) => {
-            if (a.name < b.name) {
-                return -1;
-            }
-            if (a.name > b.name) {
-                return 1;
-            }
-
-            return 0;
-        });
-    } else {
-        return clone
-            .sort((a, b) => {
+    if (type === "asc") {
+        if (!sort) {
+            return clone.sort((a, b) => {
                 if (a.name < b.name) {
                     return -1;
                 }
@@ -41,8 +31,27 @@ const sortList = (type, state) => {
                 }
 
                 return 0;
-            })
-            .reverse();
+            });
+        } else {
+            return clone.sort((a, b) => a.rating - b.rating);
+        }
+    } else {
+        if (!sort) {
+            return clone
+                .sort((a, b) => {
+                    if (a.name < b.name) {
+                        return -1;
+                    }
+                    if (a.name > b.name) {
+                        return 1;
+                    }
+
+                    return 0;
+                })
+                .reverse();
+        } else {
+            return clone.sort((a, b) => a.rating - b.rating).reverse();
+        }
     }
 };
 

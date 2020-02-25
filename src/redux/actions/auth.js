@@ -1,7 +1,8 @@
-import errorHandler from '../../helpers/errorHandler';
-import instance from '../../config/axios';
-import { toast } from 'react-toastify';
-import { history } from '../store';
+import errorHandler from "../../helpers/errorHandler";
+import instance from "../../config/axios";
+import { toast } from "react-toastify";
+import swal from "sweetalert";
+import { history } from "../store";
 import {
     AUTHENTICATED,
     AUTHENTICATING,
@@ -9,7 +10,7 @@ import {
     CLEAR_AUTH_ERROR,
     AUTHENTICATION_ERROR,
     AUTHENTICATION_SUCCESS
-} from '../reducers/auth';
+} from "../reducers/auth";
 
 export const authenticating = () => ({
     type: AUTHENTICATING
@@ -41,23 +42,29 @@ export const auth = user => async dispatch => {
     try {
         dispatch(authenticating());
 
-        const response = await instance.post('/auth/login', user);
+        const response = await instance.post("/auth/login", user);
 
         if (!response.data.data.user.admin) {
-            dispatch(authenticationFailure('⚠️ Admin Access Only!'));
+            dispatch(authenticationFailure("⚠️ Admin Access Only!"));
             return;
         }
-        localStorage.setItem('token', response.data.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.data.user));
+        localStorage.setItem("token", response.data.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.data.user));
         dispatch(authenticationSuccess(response.data.data.user));
-        history.push('/admin');
+        swal({
+            title: "Good job!",
+            text: `Welcome back! ${response.data.data.user.username}`,
+            icon: "success",
+            timer: 2000
+        });
+        history.push("/admin");
     } catch (error) {
         const errorResponse = errorHandler(error);
         dispatch(authenticationFailure(errorResponse.response));
-        if (typeof error.response.data.error === 'string') {
+        if (typeof error.response.data.error === "string") {
             toast.error(`${error.response.data.error}`, {
-                className: 'toast-container',
-                bodyClassName: 'toast-body text-sm font-light'
+                className: "toast-container",
+                bodyClassName: "toast-body text-sm font-light"
             });
         }
     }
@@ -67,20 +74,20 @@ export const authenticateUser = () => async dispatch => {
     try {
         dispatch(authenticating());
 
-        const response = JSON.parse(localStorage.getItem('token'));
+        const response = JSON.parse(localStorage.getItem("user"));
 
         dispatch(authenticationSuccess(response));
     } catch (error) {
         const errorResponse = errorHandler(error);
 
-        localStorage.removeItem('token');
+        localStorage.removeItem("token");
 
         dispatch(authenticationFailure(errorResponse.response));
     }
 };
 
 export const logout = () => dispatch => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     dispatch(resetUser());
 };

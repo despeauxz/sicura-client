@@ -1,25 +1,27 @@
-import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
-import classnames from 'classnames';
-import { Link } from 'react-router-dom';
-import { ApplicationLayout } from '../../layouts';
-import { TextInput, Spinner } from '../../components';
-import { getIncidences } from '../../redux/actions/states';
-import { getLgas, sortList } from '../../redux/actions/lgas';
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import classnames from "classnames";
+import swal from "sweetalert";
+import { Link } from "react-router-dom";
+import { ApplicationLayout } from "../../layouts";
+import { TextInput, Spinner } from "../../components";
+import { getIncidences } from "../../redux/actions/states";
+import { getLgas, sortList } from "../../redux/actions/lgas";
 import {
     getAreas,
     addArea,
     updateArea,
     deleteArea
-} from '../../redux/actions/areas';
+} from "../../redux/actions/areas";
 
 class Areas extends Component {
     state = {
         lgas: [],
         areas: [],
+        sort: "",
         active: {},
-        name: '',
-        lgaId: '',
+        name: "",
+        lgaId: "",
         report: {
             kidnap: 0,
             murder: 0,
@@ -27,11 +29,11 @@ class Areas extends Component {
         },
         selected: null,
         view: null,
-        order: ''
+        order: ""
     };
 
     componentDidMount() {
-        const { getLgas, getAreas, getIncidences, incidences } = this.props;
+        const { getLgas, getAreas, getIncidences } = this.props;
         getLgas();
         getAreas();
         getIncidences();
@@ -45,7 +47,7 @@ class Areas extends Component {
 
     handleSelected(area) {
         const report = JSON.parse(area.report);
-        this.setState({ selected: area, view: '', name: area.name, report });
+        this.setState({ selected: area, view: "", name: area.name, report });
     }
 
     handleChange = e => {
@@ -56,11 +58,11 @@ class Areas extends Component {
     };
 
     createView = () => {
-        this.setState({ selected: null, view: 'add', name: '', lgaId: '' });
+        this.setState({ selected: null, view: "add", name: "", lgaId: "" });
     };
 
     removeItem = () => {
-        this.setState({ selected: null, view: '', name: '', lgaId: '' });
+        this.setState({ selected: null, view: "", name: "", lgaId: "" });
     };
 
     handleDropdown(item) {
@@ -71,17 +73,12 @@ class Areas extends Component {
         e.preventDefault();
 
         const { name, lgaId, report } = this.state;
-        const { addArea, incidences } = this.props;
+        const { addArea } = this.props;
 
         const data = {
             name,
             lgaId,
-            report: JSON.stringify(report),
-            rating:
-                100 -
-                (report.kidnap * incidences[0].weight +
-                    report.armed_robbery * incidences[1].weight +
-                    report.murder * incidences[2].weight)
+            report: JSON.stringify(report)
         };
         addArea(data);
     };
@@ -108,38 +105,69 @@ class Areas extends Component {
     deleteItem = () => {
         const { deleteArea } = this.props;
         const { selected } = this.state;
-        deleteArea(selected.id);
-        this.setState({ selected: null });
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to undo action!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true
+        }).then(willDelete => {
+            if (willDelete) {
+                deleteArea(selected.id);
+                this.setState({ selected: null });
+                swal("Poof! item has been deleted!", {
+                    icon: "success"
+                });
+            } else {
+                return;
+            }
+        });
     };
 
     sortData = () => {
-        const { order } = this.state;
+        const { order, sort } = this.state;
         const { sortList } = this.props;
-        if (!order || order === 'desc') {
-            this.setState({ order: 'asc' });
-            sortList('asc');
+        if (!order || order === "desc") {
+            this.setState({ order: "asc" });
+            sortList("asc", sort);
         } else {
-            this.setState({ order: 'desc' });
-            sortList('desc');
+            this.setState({ order: "desc" });
+            sortList("desc", sort);
         }
     };
 
     render() {
-        const { selected, active, view, name, lgaId, report } = this.state;
+        const {
+            selected,
+            active,
+            view,
+            name,
+            sort,
+            lgaId,
+            report,
+            errors
+        } = this.state;
         const { lgas, areas, loading } = this.props;
 
         return (
             <ApplicationLayout>
                 <div className="hidden lg:flex flex-col relative z-10 w-full max-w-xs flex-grow flex-shrink-0 border-r bg-gray-300">
                     <div className="flex-shrink-0 px-4 py-2 flex items-center justify-between border-b bg-gray-200">
-                        <button className="flex items-center text-xs font-semibold text-gray-600">
-                            Sorted by Name
-                            <svg
-                                viewBox="0 0 24 24"
-                                className="ml-1 h-6 w-6 fill-current text-gray-500">
-                                <path d="M7.293 9.293a1 1 0 011.414 0L12 12.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"></path>
-                            </svg>
-                        </button>
+                        <select
+                            className={classnames(
+                                "form-select outline-none mt-1 block text-sm bg-gray-200 text-gray-600",
+                                {
+                                    "border-red-500": false,
+                                    className: true
+                                }
+                            )}
+                            placeholder="Sort by ..."
+                            name="sort"
+                            onChange={this.handleChange}
+                            value={sort}>
+                            <option value="">Sort by Name</option>
+                            <option value="rating">Sort by Ratings</option>
+                        </select>
                         <button onClick={this.sortData}>
                             <svg
                                 viewBox="0 0 24 24"
@@ -227,9 +255,9 @@ class Areas extends Component {
                                                                                             item
                                                                                         )}
                                                                                         className={classnames(
-                                                                                            'inline-flex items-center text-sm outline-none',
+                                                                                            "inline-flex items-center text-sm outline-none",
                                                                                             {
-                                                                                                'font-bold':
+                                                                                                "font-bold":
                                                                                                     !selected ||
                                                                                                     selected.id !==
                                                                                                         item.id
@@ -405,7 +433,7 @@ class Areas extends Component {
 
                         {!view && selected && (
                             <div className="flex items-center">
-                                <div style={{ width: '60%' }}>
+                                <div style={{ width: "60%" }}>
                                     <h2>{selected.name}</h2>
 
                                     <div className="mt-2">
@@ -423,7 +451,7 @@ class Areas extends Component {
                                                     }
                                                     placeholder="Enter State Name"
                                                     label="Name"
-                                                    error={null}
+                                                    error={errors.name}
                                                 />
                                             </div>
                                             <div className="w-full">
@@ -438,7 +466,7 @@ class Areas extends Component {
                                                     }
                                                     placeholder="Select LGA"
                                                     label="LGA"
-                                                    error={null}
+                                                    error={errors.lgaId}
                                                 />
                                             </div>
                                             <div className="w-full text-gray-700 my-2">
@@ -514,7 +542,7 @@ class Areas extends Component {
                                         </form>
                                     </div>
                                 </div>
-                                <div className="ml-20" style={{ width: '20%' }}>
+                                <div className="ml-20" style={{ width: "20%" }}>
                                     <div className="p-4 border border-gray-300 rounded shadow">
                                         <h4 className="text-base leading-tight uppercase text-center font-medium">
                                             Sicura Rating
@@ -527,8 +555,8 @@ class Areas extends Component {
                             </div>
                         )}
 
-                        {view === 'add' && (
-                            <div style={{ width: '60%' }}>
+                        {view === "add" && (
+                            <div style={{ width: "60%" }}>
                                 <h2 className="uppercase mb-4 text-gray-800 font-bold">
                                     Add Area
                                 </h2>
@@ -543,7 +571,7 @@ class Areas extends Component {
                                                 handleChange={this.handleChange}
                                                 placeholder="Enter Area Name"
                                                 label="Name"
-                                                error={null}
+                                                error={errors.name}
                                             />
                                         </div>
                                         <div className="w-full">
@@ -556,7 +584,7 @@ class Areas extends Component {
                                                 handleChange={this.handleChange}
                                                 placeholder="Select LGA"
                                                 label="LGA"
-                                                error={null}
+                                                error={errors.lgaId}
                                             />
                                         </div>
 

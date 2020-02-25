@@ -7,10 +7,10 @@ import {
     DELETE_STREET_SUCCESS,
     SORT_LIST,
     STREET_ERROR
-} from '../reducers/streets';
-import errorHandler from '../../helpers/errorHandler';
-import { toast } from 'react-toastify';
-import instance from '../../config/axios';
+} from "../reducers/streets";
+import errorHandler from "../../helpers/errorHandler";
+import { toast } from "react-toastify";
+import instance from "../../config/axios";
 
 export const loading = () => ({
     type: LOADING
@@ -55,7 +55,7 @@ export const addStreet = data => async dispatch => {
     try {
         dispatch(loading());
 
-        const response = await instance.post('/street_reports', data);
+        const response = await instance.post("/street_reports", data);
         const streets = await instance.get(
             `/area_street/${response.data.data.areaId}`
         );
@@ -93,7 +93,7 @@ export const addStreet = data => async dispatch => {
         });
 
         dispatch(addStreetSuccess(response.data.data));
-        toast.success('Street added successfully');
+        toast.success("Street added successfully");
     } catch (error) {
         console.log(error);
         const errorResponse = errorHandler(error);
@@ -142,7 +142,7 @@ export const updateStreet = (id, data) => async dispatch => {
         });
 
         dispatch(updateStreetSuccess(response.data.data));
-        toast.success('Street updated successfully');
+        toast.success("Street updated successfully");
     } catch (error) {
         const errorResponse = errorHandler(error);
         dispatch(streetsFailure(errorResponse.response));
@@ -151,10 +151,8 @@ export const updateStreet = (id, data) => async dispatch => {
 
 export const deleteStreet = id => async dispatch => {
     try {
-        await instance.delete(`/street_reports/${id}`);
-
         dispatch(deleteStreetSuccess(id));
-        toast.success('Street deleted successfully');
+        await instance.delete(`/street_reports/${id}`);
     } catch (error) {
         const errorResponse = errorHandler(error);
         dispatch(streetsFailure(errorResponse.response));
@@ -165,7 +163,7 @@ export const getStreets = () => async dispatch => {
     try {
         dispatch(loading());
 
-        const data = await instance.get('/street_reports');
+        const data = await instance.get("/street_reports");
         dispatch(getStreetsSuccess(data.data.data));
     } catch (error) {
         const errorResponse = errorHandler(error);

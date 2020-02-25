@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import classnames from 'classnames';
-import { auth } from '../../redux/actions/auth';
-import { Spinner } from '../../components';
-import './index.scss';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
+import classnames from "classnames";
+import { auth } from "../../redux/actions/auth";
+import { Spinner } from "../../components";
+import "./index.scss";
 
 class Login extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            email: '',
-            password: '',
+            email: "",
+            password: "",
             errors: {}
         };
     }
@@ -33,9 +33,10 @@ class Login extends Component {
     handleSubmit = e => {
         e.preventDefault();
         const { email, password } = this.state;
+        const { auth } = this.props;
 
         const user = { email, password };
-        this.props.auth(user);
+        auth(user);
     };
 
     render() {
@@ -65,9 +66,9 @@ class Login extends Component {
                                         name="email"
                                         value={email}
                                         className={classnames(
-                                            'form-input mt-1 block w-full',
+                                            "form-input mt-1 block w-full",
                                             {
-                                                'border-red-500': errors.email
+                                                "border-red-500": errors.email
                                             }
                                         )}
                                         placeholder="example@email.com"
@@ -90,9 +91,9 @@ class Login extends Component {
                                         name="password"
                                         value={password}
                                         className={classnames(
-                                            'form-input mt-1 block w-full',
+                                            "form-input mt-1 block w-full",
                                             {
-                                                'border-red-500':
+                                                "border-red-500":
                                                     errors.password
                                             }
                                         )}
@@ -124,6 +125,7 @@ class Login extends Component {
 }
 
 const mapStateToProps = state => ({
+    user: state.auth.user,
     errors: state.auth.errors,
     loading: state.auth.loading,
     authenticated: state.auth.authenticated

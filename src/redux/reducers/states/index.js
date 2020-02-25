@@ -1,15 +1,15 @@
-export const GET_ALL_STATES = 'GET_ALL_STATES';
-export const GET_STATE = 'GET_STATE';
-export const GET_INCIDENCES = 'GET_INCIDENCES';
-export const ADD_INCIDENCE = 'ADD_INCIDENCE';
-export const UPDATE_INCIDENCE = 'UPDATE_INCIDENCE';
-export const DELETE_INCIDENCE = 'DELETE_INCIDENCE';
-export const STATES_ERROR = 'STATES_ERROR';
-export const ADD_STATE_SUCCESS = 'ADD_STATE_SUCCESS';
-export const UPDATE_STATE_SUCCESS = 'UPDATE_STATE_SUCCESS';
-export const DELETE_STATE_SUCCESS = 'DELETE_STATE_SUCCESS';
-export const STATE_SORT_LIST = 'STATE_SORT_LIST';
-export const LOADING = 'LOADING';
+export const GET_ALL_STATES = "GET_ALL_STATES";
+export const GET_STATE = "GET_STATE";
+export const GET_INCIDENCES = "GET_INCIDENCES";
+export const ADD_INCIDENCE = "ADD_INCIDENCE";
+export const UPDATE_INCIDENCE = "UPDATE_INCIDENCE";
+export const DELETE_INCIDENCE = "DELETE_INCIDENCE";
+export const STATES_ERROR = "STATES_ERROR";
+export const ADD_STATE_SUCCESS = "ADD_STATE_SUCCESS";
+export const UPDATE_STATE_SUCCESS = "UPDATE_STATE_SUCCESS";
+export const DELETE_STATE_SUCCESS = "DELETE_STATE_SUCCESS";
+export const STATE_SORT_LIST = "STATE_SORT_LIST";
+export const LOADING = "LOADING";
 
 const initialState = {
     states: [],
@@ -19,22 +19,12 @@ const initialState = {
     loading: false
 };
 
-const sortList = (type, state) => {
+const sortList = (payload, state) => {
+    const { type, sort } = payload;
     const clone = [...state.states];
-    if (type === 'asc') {
-        return clone.sort((a, b) => {
-            if (a.name < b.name) {
-                return -1;
-            }
-            if (a.name > b.name) {
-                return 1;
-            }
-
-            return 0;
-        });
-    } else {
-        return clone
-            .sort((a, b) => {
+    if (type === "asc") {
+        if (!sort) {
+            return clone.sort((a, b) => {
                 if (a.name < b.name) {
                     return -1;
                 }
@@ -43,8 +33,27 @@ const sortList = (type, state) => {
                 }
 
                 return 0;
-            })
-            .reverse();
+            });
+        } else {
+            return clone.sort((a, b) => a.rating - b.rating);
+        }
+    } else {
+        if (!sort) {
+            return clone
+                .sort((a, b) => {
+                    if (a.name < b.name) {
+                        return -1;
+                    }
+                    if (a.name > b.name) {
+                        return 1;
+                    }
+
+                    return 0;
+                })
+                .reverse();
+        } else {
+            return clone.sort((a, b) => a.rating - b.rating).reverse();
+        }
     }
 };
 
